@@ -211,7 +211,7 @@
     const FORM_EMAIL = "anmy1909@gmail.com"; 
     const FORM_ENDPOINT = "https://formsubmit.co/ajax/" + encodeURIComponent(FORM_EMAIL);
     
-    // Google Sheets endpoint - thay YOUR_SCRIPT_ID bằng ID thực tế
+    // Google Sheets endpoint - URL thực tế từ deployment
     const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyIFuvAwVQIZ42S2OLtqpjtCezlOGxfcrYZVcSmvmd1_V0EF1rMNhF4fC0CN_Z-vJ6HoQ/exec";
 
     // Social links
@@ -394,21 +394,31 @@
 
     async function sendToGoogleSheets(orderData) {
       try {
+        console.log('📊 Sending to Google Sheets:', orderData);
+        
         const response = await fetch(GOOGLE_SHEETS_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(orderData)
+          body: JSON.stringify(orderData),
+          mode: 'cors'
         });
         
+        console.log('📊 Response status:', response.status);
+        
         if (!response.ok) {
-          throw new Error('Google Sheets response not ok');
+          const errorText = await response.text();
+          console.error('📊 Response error:', errorText);
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
         }
         
-        return await response.json();
+        const result = await response.json();
+        console.log('📊 Google Sheets result:', result);
+        return result;
+        
       } catch (error) {
-        console.error('Google Sheets error:', error);
+        console.error('📊 Google Sheets error:', error);
         throw error;
       }
     }
@@ -462,25 +472,46 @@
           orderCode: 'ANARO' + Date.now().toString().slice(-6)
         };
 
-        // Send to both Google Sheets and Email
-        const promises = [
-          sendToGoogleSheets(orderData),
-          sendOrderByEmail(orderData)
-        ];
+        console.log('🚀 Processing order:', orderData);
 
-        await Promise.allSettled(promises);
-        
-        // Clear form
-        document.getElementById('recipient').value = '';
-        document.getElementById('email').value = '';
-        document.getElementById('phone').value = '';
-        document.getElementById('address').value = '';
-        document.getElementById('note').value = '';
-        
-        showPopup();
+        let sheetsSuccess = false;
+        let emailSuccess = false;
+
+        // Try Google Sheets first
+        try {
+          await sendToGoogleSheets(orderData);
+          console.log('✅ Google Sheets success');
+          sheetsSuccess = true;
+        } catch (sheetsError) {
+          console.error('❌ Google Sheets failed:', sheetsError);
+        }
+
+        // Try email as backup
+        try {
+          await sendOrderByEmail(orderData);
+          console.log('✅ Email success');
+          emailSuccess = true;
+        } catch (emailError) {
+          console.error('❌ Email failed:', emailError);
+        }
+
+        // Show success if at least one method worked
+        if (sheetsSuccess || emailSuccess) {
+          // Clear form
+          document.getElementById('recipient').value = '';
+          document.getElementById('email').value = '';
+          document.getElementById('phone').value = '';
+          document.getElementById('address').value = '';
+          document.getElementById('note').value = '';
+          
+          showPopup();
+          showToast('✅ Đặt hàng thành công!', 'success');
+        } else {
+          throw new Error('Cả Google Sheets và Email đều thất bại');
+        }
         
       } catch(err) {
-        console.error('Order processing error:', err);
+        console.error('💥 Order processing error:', err);
         showToast("Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ trực tiếp qua Zalo/Messenger.", 'error');
       } finally {
         // Re-enable button
@@ -512,5 +543,4 @@
     })();
   </script>
 </body>
-
 </html>
