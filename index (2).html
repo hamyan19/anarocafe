@@ -1,0 +1,2830 @@
+<html lang="vi"><head><meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ANARO Coffee Collection — Danh mục &amp; Bảng giá</title>
+  <style>
+    :root{
+      --bg:#f6efe9; --text:#2a221d; --panel:#a47148; --ink:#F8EBDD;
+      --dot:#6b3f25; --card-border:#e9d7c5; --radius:16px;
+      --primary: #6b3f25; --secondary: #a47148; --light: #F8EBDD;
+      --border: #e9d7c5; --white: #ffffff;
+    }
+    
+    *{box-sizing:border-box}
+    
+    body{
+      margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:linear-gradient(180deg,#fff,var(--bg) 50%,#f0e2d6);
+      color:var(--text); min-height: 100vh;
+    }
+
+    /* ===== CONTAINER SYSTEM ===== */
+    .main-container {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header container - giữ gọn gàng */
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* Catalog container - rộng hơn cho sản phẩm */
+    .catalog-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Footer container */
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Responsive containers */
+    @media (max-width: 768px) {
+      .header-container, .catalog-container, .footer-container {
+        padding: 0 16px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .catalog-container {
+        padding: 0 32px;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      .catalog-container {
+        max-width: 1800px;
+        padding: 0 40px;
+      }
+    }
+
+    /* ===== HEADER STYLES ===== */
+    header.page {
+      position: sticky; top: 0; z-index: 1000;
+      background: #fdf8f3; padding: 15px 0; border-radius: 0;
+      border-bottom: 1px solid var(--card-border); margin-bottom: 20px;
+      backdrop-filter: saturate(180%) blur(8px);
+    }
+    
+    .toprow {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    
+    header h1 {
+      margin: 0; font-size: 22px; color: var(--primary);
+    }
+
+    /* Menu panel styles */
+    .menu-panel {
+      border: 1px solid var(--border); background: var(--white); border-radius: 12px;
+      margin-top: 8px; overflow: hidden;
+      max-height: 0; padding: 0;
+      transition: max-height .25s ease, padding .25s ease;
+    }
+    
+    .menu-panel.open {
+      max-height: 70vh;
+      padding: 6px 8px;
+    }
+
+    .nav-toggle {
+      display: none;
+    }
+
+    .nav {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    
+    .nav .btn {
+      padding: 8px 12px; border-radius: 999px; border: 1px solid var(--primary);
+      background: transparent; text-decoration: none; color: var(--primary);
+      font-weight: 700; transition: all 0.2s ease;
+    }
+    
+    .nav .btn:hover {
+      background: var(--primary); color: var(--white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .divider {
+      height: 1px; background: var(--border); margin: 10px 0; border-radius: 1px;
+    }
+
+    .filters {
+      display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;
+    }
+    
+    .filters .fbtn {
+      padding: 8px 14px; border-radius: 999px; border: 1px solid var(--primary);
+      background: transparent; color: var(--primary); font-weight: 600;
+      cursor: pointer; transition: all 0.2s ease;
+    }
+    
+    .filters .fbtn:hover {
+      background: var(--primary); color: var(--white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    
+    .filters .fbtn[aria-pressed="true"] {
+      background: var(--primary); color: var(--white);
+    }
+
+    /* Desktop: panel luôn mở */
+    @media (min-width: 601px) {
+      .menu-panel {
+        max-height: none; padding: 0; border: none; background: transparent; overflow: visible;
+      }
+    }
+
+    /* Mobile dropdown */
+    @media (max-width: 600px) {
+      .nav-toggle {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 8px 12px; border: 1px solid var(--primary); border-radius: 10px;
+        background: var(--white); color: var(--primary); font-weight: 700;
+      }
+
+      .menu-panel .nav {
+        flex-direction: column;
+      }
+      
+      .menu-panel .nav .btn {
+        width: 100%; text-align: left; border: none; border-bottom: 1px solid #00000012;
+        border-radius: 8px; background: #f3ede7; padding: 12px;
+      }
+      
+      .menu-panel .nav .btn:last-child {
+        border-bottom: none;
+      }
+
+      .menu-panel .filters {
+        flex-wrap: wrap; max-height: 40vh; overflow: auto;
+      }
+      
+      .menu-panel .filters .fbtn {
+        flex: 1 1 auto;
+      }
+    }
+
+    /* ===== CATALOG STYLES ===== */
+    .category {
+      margin: 30px 0 40px;
+    }
+    
+    .category-title {
+      color: var(--ink); background: var(--panel);
+      font-size: 20px; font-weight: 800; letter-spacing: .3px; text-align: center;
+      padding: 16px 24px; border-radius: 16px; text-shadow: 0 1px 1px #00000040;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+      gap: 24px; 
+      align-items: start;
+    }
+
+    /* Responsive grid */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 28px;
+      }
+    }
+
+    @media (min-width: 1600px) {
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        gap: 32px;
+      }
+    }
+
+    /* ===== CARD STYLES ===== */
+    .card {
+      background: radial-gradient(120% 140% at 10% 0%, #fff 0 40%, #fff6ee 60%, #ffeede 100%);
+      border: 1px solid var(--card-border); border-radius: var(--radius);
+      display: flex; flex-direction: column; overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+      padding: 16px 16px 8px 16px;
+    }
+    
+    .card-title {
+      margin: 0; font-size: 20px; color: var(--primary);
+    }
+    
+    .best-for {
+      margin: 8px 16px; background: var(--panel); color: var(--ink);
+      padding: 10px 14px; border-radius: 12px; font-size: 14px; line-height: 1.4;
+    }
+
+    .stats {
+      display: grid; grid-template-columns: 1fr; gap: 8px; 
+      padding: 0 16px 8px 16px; font-size: 14px;
+    }
+    
+    .rating {
+      display: inline-grid; grid-auto-flow: column; gap: 4px; color: var(--dot);
+    }
+    
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%; border: 1px solid currentColor;
+    }
+    
+    .dot.f {
+      background: currentColor;
+    }
+
+    .methods {
+      padding: 8px 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 8px;
+    }
+    
+    .method {
+      padding: 8px 10px; border: 1px solid #0000001a; border-radius: 8px; 
+      background: #0000000e; text-align: center; font-weight: 600; font-size: 14px;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+    }
+
+    .pack {
+      padding: 0 16px 12px 16px; font-size: 14px;
+    }
+    
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;
+    }
+    
+    .chip {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px;
+      border-radius: 8px; background: #0000000e; border: 1px solid #0000001a; font-weight: 600;
+    }
+    
+    .chip small {
+      opacity: .7; font-weight: 700;
+    }
+
+    .actions {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 16px;
+    }
+    
+    .btn {
+      display: inline-flex; justify-content: center; align-items: center; 
+      padding: 10px 12px; border-radius: 10px; font-weight: 700; text-decoration: none; 
+      cursor: pointer; border: 1px solid #0000001a; color: var(--primary); background: #0000000e;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+      background: var(--light); color: var(--primary); border-color: transparent;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .footer {
+      margin-top: auto; padding: 10px 12px; border-top: 1px solid var(--card-border); 
+      text-align: center; color: #806a5b; font-size: 12px; background: #ffffffaa;
+    }
+
+    /* ===== FOOTER STYLES ===== */
+    .main-footer {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white); padding: 60px 0 30px; margin-top: 60px;
+      position: relative; overflow: hidden;
+    }
+
+    .main-footer::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="coffee" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23coffee)"/></svg>');
+      pointer-events: none;
+    }
+
+    .footer-content {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;
+      position: relative; z-index: 2;
+    }
+
+    .footer-info h3 {
+      font-size: 2rem; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    }
+
+    .footer-info p {
+      font-size: 1.1rem; line-height: 1.6; opacity: 0.9; margin-bottom: 25px;
+    }
+
+    .contact-info {
+      display: flex; flex-direction: column; gap: 12px;
+    }
+
+    .contact-item {
+      display: flex; align-items: center; gap: 12px; font-size: 1rem; opacity: 0.9;
+    }
+
+    .contact-item .icon {
+      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+    }
+
+    .social-section h4 {
+      font-size: 1.3rem; margin-bottom: 20px; text-align: center;
+    }
+
+    .social-links {
+      display: flex; justify-content: center; gap: 15px; margin-bottom: 30px;
+    }
+
+    .social-link {
+      display: flex; align-items: center; justify-content: center;
+      width: 50px; height: 50px; border-radius: 15px; text-decoration: none;
+      color: var(--white); font-weight: bold; font-size: 1.5rem;
+      transition: all 0.3s ease; position: relative; overflow: hidden;
+    }
+
+    .social-link.facebook {
+      background: linear-gradient(135deg, #1877F2, #42a5f5);
+    }
+
+    .social-link.instagram {
+      background: linear-gradient(135deg, #E4405F, #FCAF45, #833AB4);
+    }
+
+    .social-link.tiktok {
+      background: linear-gradient(135deg, #000000, #25F4EE, #FE2C55);
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    .map-container {
+      background: var(--white); border-radius: 15px; overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2); height: 250px; position: relative;
+    }
+
+    .map-placeholder {
+      width: 100%; height: 100%; background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+      display: flex; align-items: center; justify-content: center; color: var(--text);
+      font-size: 1.1rem; position: relative; cursor: pointer; transition: all 0.3s ease;
+    }
+
+    .map-placeholder:hover {
+      background: linear-gradient(45deg, #e8e8e8, #d8d8d8);
+    }
+
+    .map-placeholder::before {
+      content: '📍'; font-size: 3rem; margin-bottom: 10px; display: block;
+    }
+
+    .map-overlay {
+      position: absolute; top: 15px; left: 15px;
+      background: rgba(107, 63, 37, 0.9); color: var(--white);
+      padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; font-weight: 600;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2); padding-top: 25px; text-align: center;
+      position: relative; z-index: 2;
+    }
+
+    .footer-bottom p {
+      opacity: 0.8; font-size: 0.95rem;
+    }
+
+    /* Footer responsive */
+    @media (max-width: 768px) {
+      .main-footer {
+        padding: 40px 0 20px;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr; gap: 30px; text-align: center;
+      }
+
+      .footer-info h3 {
+        font-size: 1.8rem; justify-content: center;
+      }
+
+      .contact-info {
+        align-items: center;
+      }
+
+      .contact-item {
+        justify-content: center;
+      }
+
+      .social-links {
+        gap: 20px;
+      }
+
+      .social-link {
+        width: 55px; height: 55px;
+      }
+
+      .map-container {
+        height: 200px;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0; transform: translateY(30px);
+      }
+      to {
+        opacity: 1; transform: translateY(0);
+      }
+    }
+
+    .footer-content > * {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .footer-content > *:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .footer-bottom {
+      animation: fadeInUp 0.6s ease 0.4s forwards; opacity: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="page">
+  <div class="toprow">
+    <h1>☕ ANARO COFFEE COLLECTION</h1>
+
+    <!-- Nút mở/đóng menu (chỉ hiện trên mobile) -->
+    <button class="nav-toggle" aria-expanded="false" aria-controls="menuPanel" aria-label="Mở menu">
+      ☰ Menu
+    </button>
+  </div>
+
+  <!-- PANEL MENU: chứa cả LINK + BỘ LỌC -->
+  <div id="menuPanel" class="menu-panel" data-state="closed" aria-hidden="true">
+    <nav class="nav" aria-label="Menu">
+      <a class="btn" href="faq.html">❓ Câu hỏi thường gặp</a>
+      <a class="btn" href="/blog">📝 Blog cà phê</a>
+      <a class="btn" href="contact.html">📞 Liên hệ</a>
+      <a class="btn btn-primary" href="index-cart.html">🛒 Mua hàng</a>
+    </nav>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <nav id="filters" class="filters" aria-label="Lọc danh mục"><button class="fbtn" data-cat="__all" aria-pressed="true">Tất cả</button><button class="fbtn" data-cat="ÊM NHẸ – THANH" aria-pressed="false">ÊM NHẸ – THANH</button><button class="fbtn" data-cat="CÂN BẰNG – TRÒN VỊ" aria-pressed="false">CÂN BẰNG – TRÒN VỊ</button><button class="fbtn" data-cat="ĐẬM MẠNH – HẬU DÀI" aria-pressed="false">ĐẬM MẠNH – HẬU DÀI</button></nav>
+  </div>
+</header>
+
+<style>
+  /* Card wrapper */
+  header.page{background:#fdf8f3;padding:15px;border-radius:15px;border:1px solid #eadfd4}
+  .toprow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .divider{height:1px;background:#eadfd4;margin:10px 0;border-radius:1px}
+
+  /* Nav buttons */
+  .nav{display:flex;gap:10px;flex-wrap:wrap}
+  .nav .btn{padding:8px 12px;border-radius:999px;border:1px solid #6b3f25;background:transparent;text-decoration:none;color:#6b3f25;font-weight:700;transition:.2s}
+  .nav .btn:hover{background:#6b3f25;color:#fff;border-color:#6b3f25;box-shadow:0 2px 6px #00000026}
+
+  /* Filter chips */
+  .filters{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+  .filters .fbtn{padding:8px 14px;border-radius:999px;border:1px solid #6b3f25;background:transparent;color:#6b3f25;font-weight:600;cursor:pointer;transition:.2s}
+  .filters .fbtn:hover{background:#6b3f25;color:#fff;border-color:#6b3f25;box-shadow:0 2px 6px #00000026}
+  .filters .fbtn[aria-pressed="true"]{background:#6b3f25;color:#fff;border-color:#6b3f25}
+
+  /* ---- PANEL: mặc định đóng, mở bằng .open (áp dụng cho mọi kích thước) ---- */
+  .menu-panel{
+    border:1px solid #eadfd4; background:#fff; border-radius:12px;
+    margin-top:8px; overflow:hidden;
+    max-height:0; padding:0;
+    transition:max-height .25s ease, padding .25s ease;
+  }
+  .menu-panel.open{
+    max-height:70vh;               /* auto fit theo màn hình */
+    padding:6px 8px;
+  }
+
+  /* Toggle (ẩn trên desktop) */
+  .nav-toggle{display:none}
+
+  /* Desktop: panel luôn mở, sticky như cũ */
+  @media (min-width:601px){
+    header.page{position:sticky;top:0;z-index:1000}
+    .nav-toggle{display:none}
+    .menu-panel{
+      max-height:none; padding:0; border:none; background:transparent; overflow:visible;
+    }
+  }
+
+  /* Mobile dropdown */
+  @media (max-width:600px){
+    .toprow{align-items:flex-start}
+    .nav-toggle{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:8px 12px;border:1px solid #6b3f25;border-radius:10px;
+      background:#fff;color:#6b3f25;font-weight:700
+    }
+
+    /* Bên trong panel: sắp dọc, có thể cuộn nếu dài */
+    .menu-panel .nav{flex-direction:column}
+    .menu-panel .nav .btn{
+      width:100%;text-align:left;border:none;border-bottom:1px solid #00000012;
+      border-radius:8px;background:#f3ede7;padding:12px
+    }
+    .menu-panel .nav .btn:last-child{border-bottom:none}
+
+    /* Filter cũng ở trong panel và cuộn dọc/nếu dài */
+    .menu-panel .filters{flex-wrap:wrap;max-height:40vh;overflow:auto}
+    .menu-panel .filters .fbtn{flex:1 1 auto}
+
+    
+  }
+</style>
+
+<script>
+  (function(){
+    const toggle = document.querySelector('.nav-toggle');
+    const panel  = document.getElementById('menuPanel');
+    if(!toggle || !panel) return;
+
+    const open  = () => {
+      panel.classList.add('open');
+      panel.dataset.state = 'open';
+      panel.setAttribute('aria-hidden','false');
+      toggle.setAttribute('aria-expanded','true');
+    };
+    const close = () => {
+      panel.classList.remove('open');
+      panel.dataset.state = 'closed';
+      panel.setAttribute('aria-hidden','true');
+      toggle.setAttribute('aria-expanded','false');
+    };
+
+    toggle.addEventListener('click', (e)=>{
+      panel.classList.contains('open') ? close() : open();
+      e.stopPropagation();
+    });
+
+    // đóng khi click vào link menu hoặc nút lọc
+    panel.addEventListener('click', (e)=>{
+      if(e.target.closest('a, .fbtn')) close();
+    });
+
+    // click ra ngoài panel thì đóng
+    document.addEventListener('click', (e)=>{
+      if(!panel.classList.contains('open')) return;
+      if(!panel.contains(e.target) && e.target !== toggle) close();
+    });
+
+    // ESC để đóng
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
+  })();
+</script>
+<style>
+  header.page {
+    background-color: #fdf8f3;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #eadfd4;
+  }
+  .nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav .btn {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #6b3f25;
+    background: transparent;
+    text-decoration: none;
+    color: #6b3f25;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+  .nav .btn:hover {
+    background: #6b3f25;
+    color: #fff;
+    border-color: #6b3f25;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .filters {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filters .fbtn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #6b3f25;
+    background: transparent;
+    color: #6b3f25;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .filters .fbtn:hover {
+    background: #6b3f25;
+    color: #fff;
+    border-color: #6b3f25;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .filters .fbtn[aria-pressed="true"] {
+    background: #6b3f25;
+    color: #fff;
+    border-color: #6b3f25;
+  }
+
+  /* Responsive cho điện thoại */
+  @media (max-width: 600px) {
+    .toprow {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .nav {
+      flex-direction: column;
+      width: 100%;
+    }
+    .nav .btn {
+      width: 100%;
+      text-align: center;
+    }
+    .filters {
+      flex-direction: column;
+      width: 100%;
+    }
+    .filters .fbtn {
+      width: 100%;
+    }
+  }
+</style>
+
+
+<style>
+  header.page {
+    background-color: #fdf8f3; /* màu be nhạt */
+    padding: 15px;
+    border-radius: 15px; /* bo tròn góc */
+    border: 1px solid #eadfd4; /* viền nhẹ */
+  }
+  .nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .nav .btn {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid #6b3f25;
+    background: transparent;
+    text-decoration: none;
+    color: #6b3f25;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+  .nav .btn:hover {
+    background: #6b3f25;
+    color: #fff;
+    border-color: #6b3f25;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .filters {
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filters .fbtn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid #6b3f25;
+    background: transparent;
+    color: #6b3f25;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .filters .fbtn:hover {
+    background: #6b3f25;
+    color: #fff;
+    border-color: #6b3f25;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+  .filters .fbtn[aria-pressed="true"] {
+    background: #6b3f25;
+    color: #fff;
+    border-color: #6b3f25;
+  }
+</style>
+
+
+    <!-- Catalog sẽ render ở đây -->
+    <div id="catalog"><section class="category"><h2 class="category-title">ÊM NHẸ – THANH</h2><div class="grid"><article class="card" id="arabica-cau-dat" aria-labelledby="arabica-cau-dat-t">
+        <header class="card-header"><h3 id="arabica-cau-dat-t" class="card-title">Arabica Cầu Đất</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Người yêu hương vị trái cây, uống nhẹ nhàng</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★☆</span></div><div class="method">☕<span>Espresso</span><span>★★☆</span></div><div class="method">🌊<span>Pour Over</span><span>★★☆</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>100.000đ</small></span><span class="chip"><span>500g</span><small>210.000đ</small></span><span class="chip"><span>1kg</span><small>360.000đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#arabica-cau-dat">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer" style="opacity: 1;">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="arabica-da-lat" aria-labelledby="arabica-da-lat-t">
+        <header class="card-header"><h3 id="arabica-da-lat-t" class="card-title">Arabica Đà Lạt</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Hương vị cân bằng, classic và thanh thoát</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★☆</span></div><div class="method">🌊<span>Pour Over</span><span>★★★</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>90.000đ</small></span><span class="chip"><span>500g</span><small>195.000đ</small></span><span class="chip"><span>1kg</span><small>330.000đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#arabica-da-lat">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="blend-3" aria-labelledby="blend-3-t">
+        <header class="card-header"><h3 id="blend-3-t" class="card-title">Blend Số 3 (A Đà Lạt 50% · R 50%)</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Cầu nối giữa nhẹ và đậm; cà phê sữa đá hàng ngày</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★☆</span></div><div class="method">🌊<span>Pour Over</span><span>★★☆</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>85.000đ</small></span><span class="chip"><span>500g</span><small>181.250đ</small></span><span class="chip"><span>1kg</span><small>302.500đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#blend-3">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="blend-9" aria-labelledby="blend-9-t">
+        <header class="card-header"><h3 id="blend-9-t" class="card-title">Blend Số 9 (A Cầu Đất 50% · R Honey 50%)</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Đậm nhưng hậu ngọt; hợp sữa đá/bạc xỉu</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★★</span></div><div class="method">🌊<span>Pour Over</span><span>★☆☆</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>95.000đ</small></span><span class="chip"><span>500g</span><small>201.250đ</small></span><span class="chip"><span>1kg</span><small>342.500đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#blend-9">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article></div></section><section class="category"><h2 class="category-title">CÂN BẰNG – TRÒN VỊ</h2><div class="grid"><article class="card" id="blend-2" aria-labelledby="blend-2-t">
+        <header class="card-header"><h3 id="blend-2-t" class="card-title">Blend Số 2 (A Đà Lạt 30% · R 70%)</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Ly sữa có mùi Arabica rõ, body &amp; caffeine tốt</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★★</span></div><div class="method">🌊<span>Pour Over</span><span>★★☆</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>80.000đ</small></span><span class="chip"><span>500g</span><small>173.750đ</small></span><span class="chip"><span>1kg</span><small>287.500đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#blend-2">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="blend-10" aria-labelledby="blend-10-t">
+        <header class="card-header"><h3 id="blend-10-t" class="card-title">Blend Số 10 (A Cầu Đất 30% · R Honey 70%)</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Đậm – tròn, hậu ngọt hơn nhờ Robusta Honey</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★★</span></div><div class="method">🌊<span>Pour Over</span><span>★★☆</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>93.000đ</small></span><span class="chip"><span>500g</span><small>197.750đ</small></span><span class="chip"><span>1kg</span><small>335.500đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#blend-10">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="tam-bo-6" aria-labelledby="tam-bo-6-t">
+        <header class="card-header"><h3 id="tam-bo-6-t" class="card-title">Tẩm bơ Số 6 (A Đà Lạt 30% · R 70%)</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Chỉ dành cho pha phin</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>85.000đ</small></span><span class="chip"><span>500g</span><small>178.750đ</small></span><span class="chip"><span>1kg</span><small>297.500đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#tam-bo-6">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="tam-bo-7" aria-labelledby="tam-bo-7-t">
+        <header class="card-header"><h3 id="tam-bo-7-t" class="card-title">Tẩm bơ Số 7 (A Đà Lạt 50% · R 50%)</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Chỉ dành cho pha phin</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>90.000đ</small></span><span class="chip"><span>500g</span><small>186.250đ</small></span><span class="chip"><span>1kg</span><small>312.500đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#tam-bo-7">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article></div></section><section class="category"><h2 class="category-title">ĐẬM MẠNH – HẬU DÀI</h2><div class="grid"><article class="card" id="robusta-honey" aria-labelledby="robusta-honey-t">
+        <header class="card-header"><h3 id="robusta-honey-t" class="card-title">Robusta Honey</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Đậm nhưng ngọt hậu; hợp sữa</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★☆</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>89.000đ</small></span><span class="chip"><span>500g</span><small>192.500đ</small></span><span class="chip"><span>1kg</span><small>325.000đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#robusta-honey">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="robusta-moc" aria-labelledby="robusta-moc-t">
+        <header class="card-header"><h3 id="robusta-moc-t" class="card-title">Robusta Mộc</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Đen nóng/đen đá rất đậm, mộc, hậu dài</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★★</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>75.000đ</small></span><span class="chip"><span>500g</span><small>167.500đ</small></span><span class="chip"><span>1kg</span><small>275.000đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#robusta-moc">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article><article class="card" id="culi-moc" aria-labelledby="culi-moc-t">
+        <header class="card-header"><h3 id="culi-moc-t" class="card-title">Culi Mộc</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: Đậm mượt, hậu dài</p>
+        <div class="stats">
+          <div>☕ Độ đậm: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span></span></div>
+          <div>⏰ Caffeine: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span></span></div>
+          <div>🔥 Mức rang: <span class="rating"><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot f"></span><span class="dot "></span></span></div>
+        </div>
+        <div class="methods"><div class="method">🫖<span>Phin</span><span>★★★</span></div><div class="method">☕<span>Espresso</span><span>★★★</span></div></div>
+        <div class="pack"><strong>📦 Đóng gói &amp; giá:</strong>
+          <div class="chips">
+            <span class="chip"><span>250g</span><small>75.000đ</small></span><span class="chip"><span>500g</span><small>167.500đ</small></span><span class="chip"><span>1kg</span><small>275.000đ</small></span>
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#culi-moc">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article></div></section></div>
+
+    <!-- BẢNG GIÁ & COMBO -->
+    
+  </div>
+
+  <script>
+    // =========================
+    // DỮ LIỆU SẢN PHẨM
+    // =========================
+    const products = [
+      // ===== ÊM NHẸ – THANH =====
+      {
+        id:"arabica-cau-dat", category:"ÊM NHẸ – THANH",
+        name:"Arabica Cầu Đất", bestFor:"Người yêu hương vị trái cây, uống nhẹ nhàng",
+        stats:{ strength:2, caffeine:2, roast:2 },
+        methods:{ phin:2, espresso:2, pour:2 },
+        price:{ "250g":"100.000đ", "500g":"210.000đ", "1kg":"360.000đ" }
+      },
+      {
+        id:"arabica-da-lat", category:"ÊM NHẸ – THANH",
+        name:"Arabica Đà Lạt", bestFor:"Hương vị cân bằng, classic và thanh thoát",
+        stats:{ strength:2, caffeine:2, roast:2 },
+        methods:{ phin:3, espresso:2, pour:3 },
+        price:{ "250g":"90.000đ", "500g":"195.000đ", "1kg":"330.000đ" }
+      },
+      {
+        id:"blend-3", category:"ÊM NHẸ – THANH",
+        name:"Blend Số 3 (A Đà Lạt 50% · R 50%)", bestFor:"Cầu nối giữa nhẹ và đậm; cà phê sữa đá hàng ngày",
+        stats:{ strength:3, caffeine:3, roast:3 },
+        methods:{ phin:3, espresso:2, pour:2 },
+        price:{ "250g":"85.000đ", "500g":"181.250đ", "1kg":"302.500đ" }
+      },
+      {
+        id:"blend-9", category:"ÊM NHẸ – THANH",
+        name:"Blend Số 9 (A Cầu Đất 50% · R Honey 50%)", bestFor:"Đậm nhưng hậu ngọt; hợp sữa đá/bạc xỉu",
+        stats:{ strength:3, caffeine:3, roast:2 },
+        methods:{ phin:3, espresso:3, pour:1 },
+        price:{ "250g":"95.000đ", "500g":"201.250đ", "1kg":"342.500đ" }
+      },
+
+      // ===== CÂN BẰNG – TRÒN VỊ =====
+      {
+        id:"blend-2", category:"CÂN BẰNG – TRÒN VỊ",
+        name:"Blend Số 2 (A Đà Lạt 30% · R 70%)", bestFor:"Ly sữa có mùi Arabica rõ, body & caffeine tốt",
+        stats:{ strength:4, caffeine:4, roast:4 },
+        methods:{ phin:3, espresso:3, pour:2, milk:3 },
+        price:{ "250g":"80.000đ", "500g":"173.750đ", "1kg":"287.500đ" }
+      },
+      {
+        id:"blend-10", category:"CÂN BẰNG – TRÒN VỊ",
+        name:"Blend Số 10 (A Cầu Đất 30% · R Honey 70%)", bestFor:"Đậm – tròn, hậu ngọt hơn nhờ Robusta Honey",
+        stats:{ strength:4, caffeine:4, roast:4 },
+        methods:{ phin:3, espresso:3, pour:2, milk:3 },
+        price:{ "250g":"93.000đ", "500g":"197.750đ", "1kg":"335.500đ" }
+      },
+      // TẨM BƠ SỐ 6 & SỐ 7 — chỉ pha phin
+      {
+        id:"tam-bo-6", category:"CÂN BẰNG – TRÒN VỊ",
+        name:"Tẩm bơ Số 6 (A Đà Lạt 30% · R 70%)", bestFor:"Chỉ dành cho pha phin",
+        stats:{ strength:4, caffeine:4, roast:3 },
+        methods:{ phin:3 },
+        price:{ "250g":"85.000đ", "500g":"178.750đ", "1kg":"297.500đ" }
+      },
+      {
+        id:"tam-bo-7", category:"CÂN BẰNG – TRÒN VỊ",
+        name:"Tẩm bơ Số 7 (A Đà Lạt 50% · R 50%)", bestFor:"Chỉ dành cho pha phin",
+        stats:{ strength:3, caffeine:3, roast:3 },
+        methods:{ phin:3 },
+        price:{ "250g":"90.000đ", "500g":"186.250đ", "1kg":"312.500đ" }
+      },
+
+      // ===== ĐẬM MẠNH – HẬU DÀI =====
+      {
+        id:"robusta-honey", category:"ĐẬM MẠNH – HẬU DÀI",
+        name:"Robusta Honey", bestFor:"Đậm nhưng ngọt hậu; hợp sữa",
+        stats:{ strength:4, caffeine:4, roast:4 },
+        methods:{ phin:3, espresso:2 },
+        price:{ "250g":"89.000đ", "500g":"192.500đ", "1kg":"325.000đ" }
+      },
+      {
+        id:"robusta-moc", category:"ĐẬM MẠNH – HẬU DÀI",
+        name:"Robusta Mộc", bestFor:"Đen nóng/đen đá rất đậm, mộc, hậu dài",
+        stats:{ strength:5, caffeine:5, roast:4 },
+        methods:{ phin:3, espresso:3 },
+        price:{ "250g":"75.000đ", "500g":"167.500đ", "1kg":"275.000đ" }
+      },
+      {
+        id:"culi-moc", category:"ĐẬM MẠNH – HẬU DÀI",
+        name:"Culi Mộc", bestFor:"Đậm mượt, hậu dài",
+        stats:{ strength:5, caffeine:5, roast:4 },
+        methods:{ phin:3, espresso:3 },
+        price:{ "250g":"75.000đ", "500g":"167.500đ", "1kg":"275.000đ" }
+      },
+    ];
+
+    const combos = [
+      { name:"Combo Êm Nhẹ", items:["Arabica Cầu Đất","Blend Số 3","Blend Số 9"], price:"~261.000đ" },
+      { name:"Combo Cân Bằng", items:["Blend Số 2","Robusta Honey","Arabica Đà Lạt"], price:"~242.000đ" },
+      { name:"Combo Đậm Mạnh", items:["Robusta Mộc","Culi Mộc","Robusta Honey"], price:"~228.000đ" },
+      { name:"Combo Tẩm Bơ", items:["Tẩm bơ Số 6","Tẩm bơ Số 7","Số 9"], price:"~252.000đ" },
+      { name:"Combo Tổng hợp", items:["Arabica Cầu Đất","Số 3","Số 9"], price:"~275.500đ" },
+    ];
+
+    // =========================
+    // HÀM RENDER + BỘ LỌC
+    // =========================
+    const $ = (sel, ctx=document) => ctx.querySelector(sel);
+    const $$ = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+
+    function dotRow(v, max=5){
+      return `<span class="rating">${Array.from({length:max}).map((_,i)=>`<span class="dot ${i<v? 'f':''}"></span>`).join('')}</span>`;
+    }
+
+    function methodBlock(methods){
+      const map = [
+        methods.phin ? `<div class="method">🫖<span>Phin</span><span>${'★'.repeat(methods.phin)}${'☆'.repeat(3 - (methods.phin||0))}</span></div>`: '' ,
+        methods.espresso ? `<div class="method">☕<span>Espresso</span><span>${'★'.repeat(methods.espresso)}${'☆'.repeat(3 - (methods.espresso||0))}</span></div>`: '' ,
+        methods.pour ? `<div class="method">🌊<span>Pour Over</span><span>${'★'.repeat(methods.pour)}${'☆'.repeat(3 - (methods.pour||0))}</span></div>`: '' ,
+      ].filter(Boolean).join('');
+      return `<div class="methods">${map}</div>`;
+    }
+
+    function productCard(p){
+      return `<article class="card" id="${p.id}" aria-labelledby="${p.id}-t">
+        <header class="card-header"><h3 id="${p.id}-t" class="card-title">${p.name}</h3></header>
+        <p class="best-for">🎯 Thích hợp nhất cho: ${p.bestFor}</p>
+        <div class="stats">
+          <div>☕ Độ đậm: ${dotRow(p.stats.strength)}</div>
+          <div>⏰ Caffeine: ${dotRow(p.stats.caffeine)}</div>
+          <div>🔥 Mức rang: ${dotRow(p.stats.roast)}</div>
+        </div>
+        ${methodBlock(p.methods)}
+        <div class="pack"><strong>📦 Đóng gói & giá:</strong>
+          <div class="chips">
+            ${Object.entries(p.price).map(([size,price])=>`<span class="chip"><span>${size}</span><small>${price}</small></span>`).join('')}
+          </div>
+        </div>
+        <div class="actions">
+          <!-- Đổi CTA: sang trang có giỏ hàng -->
+          <a class="btn btn-primary" href="/index-cart.html#${p.id}">Mua ngay</a>
+          <a class="btn" href="faq.html">Câu hỏi thường gặp</a>
+        </div>
+        <div class="footer">ANARO Coffee Guide · © 2025</div>
+      </article>`;
+    }
+
+    function renderFilters(categories){
+      const root = document.getElementById('filters');
+      const allBtn = `<button class="fbtn" data-cat="__all" aria-pressed="true">Tất cả</button>`;
+      const catBtns = categories.map(c=>`<button class="fbtn" data-cat="${c}" aria-pressed="false">${c}</button>`).join('');
+      root.innerHTML = allBtn + catBtns;
+      root.addEventListener('click', (e)=>{
+        const btn = e.target.closest('button.fbtn');
+        if(!btn) return;
+        $$('#filters .fbtn').forEach(b=>b.setAttribute('aria-pressed','false'));
+        btn.setAttribute('aria-pressed','true');
+        const cat = btn.dataset.cat;
+        renderCatalog(cat === '__all' ? null : cat);
+      });
+    }
+
+    function renderCatalog(filterCat=null){
+      const byCat = products.reduce((acc,p)=>{ (acc[p.category] ||= []).push(p); return acc; },{});
+      const root = document.getElementById('catalog');
+      const cats = Object.keys(byCat);
+      const html = cats.map(cat=>{
+        if(filterCat && cat !== filterCat) return '';
+        const cards = byCat[cat].map(productCard).join('');
+        return `<section class="category"><h2 class="category-title">${cat}</h2><div class="grid">${cards}</div></section>`;
+      }).join('');
+      root.innerHTML = html || '<p>Không có sản phẩm trong danh mục này.</p>';
+    }
+
+    function renderPrices(){
+      const byCat = products.reduce((acc,p)=>{ (acc[p.category] ||= []).push(p); return acc; },{});
+      const priceRoot = document.getElementById('priceTables');
+      priceRoot.innerHTML = Object.entries(byCat).map(([cat,items])=>{
+        const rows = items.map(p=>`<tr><td>${p.name}</td><td>${p.price['250g']||''}</td><td>${p.price['500g']||''}</td><td>${p.price['1kg']||''}</td></tr>`).join('');
+        return `<h4 style="margin:12px 0 6px" class="section-hd">${cat}</h4>
+          <table aria-label="${cat}">
+            <thead><tr><th>Sản phẩm</th><th>250g</th><th>500g</th><th>1kg</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+      }).join('');
+
+      const comboRoot = document.getElementById('combos');
+      comboRoot.innerHTML = `<table><thead><tr><th>Combo</th><th>Thành phần</th><th>Giá</th></tr></thead>
+        <tbody>
+          ${combos.map(c=>`<tr><td>${c.name}</td><td>${c.items.join(' + ')}</td><td>${c.price}</td></tr>`).join('')}
+        </tbody></table>`;
+    }
+
+    // Khởi tạo
+    const categories = [...new Set(products.map(p=>p.category))];
+    renderFilters(categories);
+    renderCatalog();
+    renderPrices();
+  </script>
+
+
+
+
+
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANARO Coffee Footer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6b3f25;
+      --secondary: #a47148;
+      --bg: #f6efe9;
+      --text: #2a221d;
+      --light: #F8EBDD;
+      --border: #e9d7c5;
+      --white: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #fff, var(--bg) 50%, #f0e2d6);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Demo content để thấy footer */
+    .demo-content {
+      flex: 1;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .demo-content h1 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+    }
+
+    .demo-content p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    /* FOOTER STYLES */
+    .footer {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      padding: 60px 0 30px;
+      margin-top: auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="coffee" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23coffee)"/></svg>');
+      pointer-events: none;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    /* Info Section */
+    .footer-info h3 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-info p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      opacity: 0.9;
+      margin-bottom: 25px;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .contact-item .icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Social Media */
+    .social-section h4 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 15px;
+      text-decoration: none;
+      color: var(--white);
+      font-weight: bold;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .social-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .social-link:hover::before {
+      left: 100%;
+    }
+
+    .social-link.facebook {
+      background: linear-gradient(135deg, #1877F2, #42a5f5);
+    }
+
+    .social-link.instagram {
+      background: linear-gradient(135deg, #E4405F, #FCAF45, #833AB4);
+    }
+
+    .social-link.tiktok {
+      background: linear-gradient(135deg, #000000, #25F4EE, #FE2C55);
+    }
+
+    .social-link:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    }
+
+    /* Map Section */
+    .map-container {
+      background: var(--white);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      height: 250px;
+      position: relative;
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text);
+      font-size: 1.1rem;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .map-placeholder:hover {
+      background: linear-gradient(45deg, #e8e8e8, #d8d8d8);
+    }
+
+    .map-placeholder::before {
+      content: '📍';
+      font-size: 3rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .map-overlay {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(107, 63, 37, 0.9);
+      color: var(--white);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* Footer Bottom */
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 25px;
+      text-align: center;
+    }
+
+    .footer-bottom p {
+      opacity: 0.8;
+      font-size: 0.95rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .footer {
+        padding: 40px 0 20px;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+      }
+
+      .footer-info h3 {
+        font-size: 1.8rem;
+        justify-content: center;
+      }
+
+      .contact-info {
+        align-items: center;
+      }
+
+      .contact-item {
+        justify-content: center;
+      }
+
+      .social-links {
+        gap: 20px;
+      }
+
+      .social-link {
+        width: 55px;
+        height: 55px;
+      }
+
+      .map-container {
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-container {
+        padding: 0 15px;
+      }
+
+      .footer-info h3 {
+        font-size: 1.6rem;
+      }
+
+      .footer-info p {
+        font-size: 1rem;
+      }
+
+      .social-link {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .footer-content > * {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .footer-content > *:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .footer-bottom {
+      animation: fadeInUp 0.6s ease 0.4s forwards;
+      opacity: 0;
+    }
+  </style>
+
+
+  <!-- Demo content -->
+  <div class="demo-content">
+    
+    
+  </div>
+
+  <!-- FOOTER -->
+  
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANARO Coffee Footer - Clean</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6b3f25;
+      --secondary: #a47148;
+      --bg: #f6efe9;
+      --text: #2a221d;
+      --light: #F8EBDD;
+      --border: #e9d7c5;
+      --white: #ffffff;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #fff, var(--bg) 50%, #f0e2d6);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Demo content */
+    .demo-content {
+      flex: 1;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .demo-content h1 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 2.5rem;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: var(--primary);
+      padding: 40px 0;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      align-items: start;
+    }
+
+    /* Box styling cho từng khung */
+    .footer-box {
+      background: var(--white);
+      border-radius: 15px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+    }
+
+    /* Facebook Box */
+    .facebook-box {
+      background: linear-gradient(135deg, #1877F2 0%, #42a5f5 100%);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .facebook-box:hover {
+      background: linear-gradient(135deg, #166fe5 0%, #3b94e8 100%);
+    }
+
+    /* Instagram Box */
+    .instagram-box {
+      background: linear-gradient(135deg, #E4405F 0%, #FCAF45 50%, #833AB4 100%);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .instagram-box:hover {
+      background: linear-gradient(135deg, #d73953 0%, #f5a73e 50%, #7632a7 100%);
+    }
+
+    /* TikTok Box */
+    .tiktok-box {
+      background: linear-gradient(135deg, #000000 0%, #25F4EE 50%, #FE2C55 100%);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .tiktok-box:hover {
+      background: linear-gradient(135deg, #1a1a1a 0%, #1ee8dc 50%, #f51e48 100%);
+    }
+
+    /* Google Shopping Box */
+    .shopping-box {
+      background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #FBBC05 100%);
+      color: var(--white);
+      cursor: pointer;
+    }
+
+    .shopping-box:hover {
+      background: linear-gradient(135deg, #3367d6 0%, #2d8f47 50%, #f4b400 100%);
+    }
+
+    /* Google Map Box */
+    .map-box {
+      background: var(--white);
+      border: 2px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-box:hover {
+      border-color: var(--primary);
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #f8f9fa 0%, #e9ecef 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Icon và text styling */
+    .footer-box h3 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .footer-box p {
+      font-size: 1rem;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .social-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .map-icon {
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      
+      .footer-box {
+        height: 160px;
+        padding: 20px;
+      }
+      
+      .footer-box h3 {
+        font-size: 1.4rem;
+      }
+      
+      .social-icon, .map-icon {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      
+      .footer-box {
+        height: 140px;
+      }
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .footer-box {
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .footer-box:nth-child(1) { animation-delay: 0.1s; }
+    .footer-box:nth-child(2) { animation-delay: 0.2s; }
+    .footer-box:nth-child(3) { animation-delay: 0.3s; }
+    .footer-box:nth-child(4) { animation-delay: 0.4s; }
+    .footer-box:nth-child(5) { animation-delay: 0.5s; }
+  </style>
+
+
+  <!-- Demo content -->
+  <div class="demo-content">
+     
+  </div>
+
+  <!-- FOOTER -->
+ <!-- ANARO COFFEE FOOTER COMPONENT -->
+<!-- 
+    Tính năng:
+    - Responsive design (Mobile-first approach)
+    - Social media links với icons rõ ràng
+    - Google Maps integration
+    - Click-to-call & click-to-email
+    - Smooth animations & hover effects
+    - SEO friendly & Accessible
+-->
+
+<!-- Font Awesome CDN - Multiple fallbacks + Unicode symbols -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+
+<!-- CSS với bộ màu đậm hơn 20% và Unicode fallbacks -->
+<style>
+/* CSS fallback với Unicode symbols */
+.social-unicode {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+    font-size: 1.4rem;
+    font-weight: normal;
+}
+
+.facebook-icon::before { content: "📘"; }
+.instagram-icon::before { content: "📷"; }  
+.tiktok-icon::before { content: "🎵"; }
+.map-icon::before { content: "📍"; }
+</style>
+
+<!-- FOOTER CSS STYLES -->
+<style>
+/* ========================================
+   ANARO COFFEE FOOTER STYLES
+   ======================================== */
+
+/* Footer Container - Latte Color Theme (Đậm 20%) */
+.footer {
+    background: linear-gradient(135deg, #b8936b 0%, #a6875f 50%, #9a7c58 100%);
+    color: #3d2d20; /* Màu chữ nâu đậm hơn để dễ đọc */
+    position: relative;
+    overflow: hidden;
+    margin-top: 4rem;
+    box-shadow: 
+        0 -15px 35px rgba(107, 63, 37, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Multiple shadow layers cho depth */
+.footer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(248, 240, 230, 0.08) 0%, 
+        transparent 50%, 
+        rgba(107, 63, 37, 0.08) 100%);
+    pointer-events: none;
+}
+
+/* Đường viền gradient phía trên - màu latte đậm */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(107, 63, 37, 0.8), 
+        rgba(248, 240, 230, 0.9),
+        rgba(107, 63, 37, 0.8), 
+        transparent);
+    box-shadow: 0 2px 8px rgba(107, 63, 37, 0.3);
+}
+
+/* Footer main container */
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem 1rem;
+}
+
+/* Footer content grid - Desktop: 2 cột, Mobile: 1 cột */
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* ========================================
+   COMPANY INFO SECTION (Cột trái)
+   ======================================== */
+
+.footer-info h3 {
+    color: #553018; /* Màu nâu đậm hơn cho title */
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-shadow: 0 1px 3px rgba(107, 63, 37, 0.4);
+}
+
+.footer-info p {
+    color: #4a332a; /* Màu nâu medium đậm cho text */
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    text-shadow: 0 1px 2px rgba(248, 240, 230, 0.25);
+}
+
+/* Contact information grid */
+.contact-info {
+    display: grid;
+    gap: 1rem;
+}
+
+/* Mỗi item liên hệ */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #4a332a; /* Màu nâu đậm cho text */
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 0.8rem;
+    border-radius: 12px;
+    background: rgba(248, 240, 230, 0.25);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(107, 63, 37, 0.3);
+    box-shadow: 0 2px 8px rgba(107, 63, 37, 0.15);
+}
+
+/* Hover effect cho contact items */
+.contact-item:hover {
+    color: #553018; /* Nâu đậm hơn khi hover */
+    background: rgba(248, 240, 230, 0.5);
+    transform: translateX(8px) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(107, 63, 37, 0.25);
+    border-color: rgba(107, 63, 37, 0.5);
+}
+
+/* Icons cho contact info */
+.contact-item .icon {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+    filter: sepia(0.4) saturate(1.3);
+    text-shadow: 0 1px 2px rgba(107, 63, 37, 0.4);
+}
+
+.contact-item:hover .icon {
+    filter: sepia(0) saturate(1.6);
+    transform: scale(1.1);
+}
+
+/* ========================================
+   SOCIAL MEDIA SECTION (Cột phải)
+   ======================================== */
+
+.social-section {
+    text-align: center;
+}
+
+.social-section h4 {
+    color: #553018; /* Màu nâu đậm hơn */
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    text-shadow: 0 1px 3px rgba(107, 63, 37, 0.4);
+}
+
+/* Social links container */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Base style cho social links - Enhanced với latte theme */
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 15px rgba(139, 90, 60, 0.3),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+/* Hiệu ứng shine khi hover - soft hơn */
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,248,240,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.social-link:hover::before {
+    left: 100%;
+}
+
+/* Base hover effect - soft elevation */
+.social-link:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+        0 8px 25px rgba(139, 90, 60, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Facebook brand colors */
+.social-link.facebook {
+    background: linear-gradient(135deg, #1877f2, #42a5f5);
+}
+
+.social-link.facebook:hover {
+    box-shadow: 0 8px 25px rgba(24, 119, 242, 0.5);
+}
+
+/* Instagram brand colors */
+.social-link.instagram {
+    background: linear-gradient(135deg, #e4405f, #f77737, #fccc63);
+}
+
+.social-link.instagram:hover {
+    box-shadow: 0 8px 25px rgba(228, 64, 95, 0.5);
+}
+
+/* TikTok brand colors */
+.social-link.tiktok {
+    background: linear-gradient(135deg, #000000, #ff0050);
+}
+
+.social-link.tiktok:hover {
+    box-shadow: 0 8px 25px rgba(255, 0, 80, 0.5);
+}
+
+/* ========================================
+   GOOGLE MAP SECTION
+   ======================================== */
+
+.map-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 25px rgba(107, 63, 37, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(248, 240, 230, 0.15);
+    background: linear-gradient(135deg, #ccb89c, #c0ad93);
+    height: 180px;
+    border: 1px solid rgba(107, 63, 37, 0.3);
+}
+
+/* Overlay label trên map */
+.map-overlay {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, rgba(107, 63, 37, 0.95), rgba(139, 90, 60, 0.9));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(107, 63, 37, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Map placeholder - click để mở Google Maps */
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0e6d2, #e8dcc0, #ddc89a);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Grid pattern cho map placeholder - màu latte */
+.map-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23c4a57b" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.4;
+}
+
+.map-placeholder:hover {
+    background: linear-gradient(135deg, #f5ebe0, #eee2d0, #e1d4a5);
+    transform: scale(1.02);
+    box-shadow: inset 0 2px 8px rgba(139, 90, 60, 0.2);
+}
+
+.map-placeholder > div {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.map-placeholder > div > div {
+    color: #553018; /* Màu nâu đậm hơn cho text */
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-shadow: 0 1px 2px rgba(248, 240, 230, 0.4);
+}
+
+.map-placeholder small {
+    color: #6f4830; /* Màu nâu medium đậm cho subtitle */
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(248, 240, 230, 0.25);
+}
+
+/* ========================================
+   FOOTER BOTTOM (Copyright)
+   ======================================== */
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid #444;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.footer-bottom p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Animated heart icon */
+.heart {
+    color: #e74c3c;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+/* Tablet & Mobile */
+@media (max-width: 768px) {
+    .footer-container {
+        padding: 2rem 1rem 1rem;
+    }
+
+    /* Chuyển sang 1 cột */
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer-info h3 {
+        font-size: 1.5rem;
+    }
+
+    .social-links {
+        gap: 1rem;
+    }
+
+    .social-link {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    .map-container {
+        height: 150px;
+    }
+
+    .contact-info {
+        gap: 0.8rem;
+    }
+
+    .contact-item {
+        font-size: 0.9rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+    .footer-container {
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    /* Stack contact items vertically */
+    .contact-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        text-align: left;
+    }
+
+    .footer-bottom p {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .social-links {
+        gap: 0.8rem;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+/* ========================================
+   ENTRANCE ANIMATION
+   ======================================== */
+
+.footer {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+</style>
+
+<!-- FOOTER HTML STRUCTURE -->
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+
+<!-- FOOTER CSS STYLES -->
+<style>
+/* ========================================
+   ANARO COFFEE FOOTER STYLES - FIXED
+   ======================================== */
+
+/* Footer Container - Fixed colors */
+.footer {
+    background: linear-gradient(135deg, #6b3f25 0%, #8b5a3c 50%, #a47148 100%);
+    color: #f8f4f0; /* Màu chữ sáng để dễ đọc trên nền đậm */
+    position: relative;
+    overflow: hidden;
+    margin-top: 4rem;
+    box-shadow: 
+        0 -15px 35px rgba(107, 63, 37, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Decorative overlay */
+.footer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(248, 240, 230, 0.05) 0%, 
+        transparent 50%, 
+        rgba(0, 0, 0, 0.05) 100%);
+    pointer-events: none;
+}
+
+/* Top border gradient */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(248, 235, 221, 0.8), 
+        rgba(255, 255, 255, 0.9),
+        rgba(248, 235, 221, 0.8), 
+        transparent);
+    box-shadow: 0 2px 8px rgba(107, 63, 37, 0.3);
+}
+
+/* Footer main container - Fixed overflow */
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 2rem 1rem;
+    width: 100%; /* Đảm bảo không tràn */
+    box-sizing: border-box;
+}
+
+/* Footer content grid */
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 2rem;
+}
+
+/* ========================================
+   COMPANY INFO SECTION - Fixed colors
+   ======================================== */
+
+.footer-info h3 {
+    color: #f8ebdd; /* Màu sáng hơn cho title */
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.footer-info p {
+    color: #e8dcc8; /* Màu sáng cho text */
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Contact information grid */
+.contact-info {
+    display: grid;
+    gap: 1rem;
+}
+
+/* Contact items - Fixed colors */
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #f0e6d2; /* Màu sáng cho text */
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 0.8rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1); /* Nền sáng mờ */
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover effect - Fixed colors */
+.contact-item:hover {
+    color: #ffffff; /* Trắng khi hover */
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(8px) translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Icons */
+.contact-item .icon {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+    filter: brightness(1.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.contact-item:hover .icon {
+    filter: brightness(1.4);
+    transform: scale(1.1);
+}
+
+/* ========================================
+   SOCIAL MEDIA SECTION - Fixed colors
+   ======================================== */
+
+.social-section {
+    text-align: center;
+}
+
+.social-section h4 {
+    color: #f8ebdd; /* Màu sáng cho title */
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Social links container */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Social links - Enhanced */
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+/* Shine effect */
+.social-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.social-link:hover::before {
+    left: 100%;
+}
+
+/* Hover effects */
+.social-link:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.3),
+        0 4px 15px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Social platform colors */
+.social-link.facebook {
+    background: linear-gradient(135deg, #1877f2, #42a5f5);
+}
+
+.social-link.facebook:hover {
+    box-shadow: 0 8px 25px rgba(24, 119, 242, 0.5);
+}
+
+.social-link.instagram {
+    background: linear-gradient(135deg, #e4405f, #f77737, #fccc63);
+}
+
+.social-link.instagram:hover {
+    box-shadow: 0 8px 25px rgba(228, 64, 95, 0.5);
+}
+
+.social-link.tiktok {
+    background: linear-gradient(135deg, #000000, #ff0050);
+}
+
+.social-link.tiktok:hover {
+    box-shadow: 0 8px 25px rgba(255, 0, 80, 0.5);
+}
+
+/* ========================================
+   GOOGLE MAP SECTION - Fixed
+   ======================================== */
+
+.map-container {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.2),
+        0 4px 15px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: linear-gradient(135deg, #f8f4f0, #ede1d0);
+    height: 180px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Map overlay */
+.map-overlay {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, rgba(107, 63, 37, 0.95), rgba(139, 90, 60, 0.9));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Map placeholder - Fixed colors */
+.map-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f4f0, #ede1d0, #e0d4c0);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+/* Grid pattern */
+.map-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23c4a57b" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.map-placeholder:hover {
+    background: linear-gradient(135deg, #ffffff, #f5ebe0, #e8dcc0);
+    transform: scale(1.02);
+    box-shadow: inset 0 2px 8px rgba(107, 63, 37, 0.1);
+}
+
+.map-placeholder > div {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.map-placeholder > div > div {
+    color: #6b3f25; /* Màu nâu đậm cho contrast tốt */
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.map-placeholder small {
+    color: #8b5a3c; /* Màu nâu medium */
+    font-size: 0.9rem;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* ========================================
+   FOOTER BOTTOM - Fixed colors
+   ======================================== */
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e8dcc8; /* Màu sáng */
+    font-size: 0.9rem;
+}
+
+.footer-bottom p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Animated heart */
+.heart {
+    color: #ff6b6b;
+    animation: heartbeat 2s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 768px) {
+    .footer-container {
+        padding: 2rem 1rem 1rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .footer-info h3 {
+        font-size: 1.5rem;
+        justify-content: center;
+    }
+
+    .footer-info {
+        text-align: center;
+    }
+
+    .contact-info {
+        align-items: center;
+    }
+
+    .contact-item {
+        justify-content: center;
+    }
+
+    .social-links {
+        gap: 1rem;
+    }
+
+    .social-link {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+
+    .map-container {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .contact-item {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+
+    .footer-bottom p {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .social-links {
+        gap: 0.8rem;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+}
+
+/* ========================================
+   ANIMATION
+   ======================================== */
+
+.footer {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Spin animation for loading */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<!-- FOOTER HTML STRUCTURE -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            
+            <!-- COMPANY INFORMATION -->
+            <div class="footer-info">
+                <h3>☕ ANARO Coffee</h3>
+                <p>Thương hiệu cà phê chất lượng cao, mang đến trải nghiệm tuyệt vời từ những hạt cà phê được tuyển chọn kỹ lưỡng từ các vùng trồng nổi tiếng Việt Nam.</p>
+                
+                <!-- Contact Information -->
+                <div class="contact-info">
+                    <!-- Địa chỉ -->
+                    <div class="contact-item" onclick="openGoogleMaps()">
+                        <span class="icon">📍</span>
+                        <span>58 Đa Phước Bình Chánh TP.HCM</span>
+                    </div>
+                    
+                    <!-- Số điện thoại -->
+                    <div class="contact-item" onclick="makePhoneCall()">
+                        <span class="icon">📞</span>
+                        <span>0918337071</span>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="contact-item" onclick="sendEmail()">
+                        <span class="icon">✉️</span>
+                        <span>anmy1909@gmail.com</span>
+                    </div>
+                    
+                    <!-- Giờ mở cửa -->
+                    <div class="contact-item">
+                        <span class="icon">🕐</span>
+                        <span>Mở cửa: 8:00 - 22:00 hàng ngày</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOCIAL MEDIA & MAP -->
+            <div class="social-section">
+                <h4>Kết nối với ANARO Coffee</h4>
+                
+                <!-- Social Media Links -->
+                <div class="social-links">
+                    <!-- Facebook -->
+                    <a href="https://facebook.com/anarocoffee" 
+                       class="social-link facebook" 
+                       title="Theo dõi ANARO Coffee trên Facebook" 
+                       target="_blank"
+                       onclick="trackSocialClick('facebook')">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    
+                    <!-- Instagram -->
+                    <a href="https://instagram.com/anarocoffee" 
+                       class="social-link instagram" 
+                       title="Theo dõi ANARO Coffee trên Instagram" 
+                       target="_blank"
+                       onclick="trackSocialClick('instagram')">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    
+                    <!-- TikTok -->
+                    <a href="https://tiktok.com/@anarocoffee" 
+                       class="social-link tiktok" 
+                       title="Theo dõi ANARO Coffee trên TikTok" 
+                       target="_blank"
+                       onclick="trackSocialClick('tiktok')">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                </div>
+
+                <!-- Google Map -->
+                <div class="map-container">
+                    <div class="map-overlay">ANARO Coffee Store</div>
+                    <div class="map-placeholder" 
+                         onclick="openGoogleMaps()" 
+                         title="Click để xem bản đồ">
+                        <div>
+                            <div>
+                                <span>📍</span>
+                                Nhấn để xem bản đồ
+                            </div>
+                            <small>58 Đa Phước, Bình Chánh, TP.HCM</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- COPYRIGHT SECTION -->
+        <div class="footer-bottom">
+            <p>
+                © 2025 ANARO Coffee. All rights reserved. | 
+                Thiết kế với <span class="heart">❤️</span> tại Việt Nam
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- FOOTER JAVASCRIPT -->
+<script>
+// Google Maps
+function openGoogleMaps() {
+    const address = encodeURIComponent("58 Đa Phước, Bình Chánh, TP.HCM, Vietnam");
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${address}`;
+    window.open(googleMapsUrl, '_blank', 'noopener,noreferrer');
+    console.log('Google Maps clicked - ANARO Coffee location');
+}
+
+// Phone call
+function makePhoneCall() {
+    const phoneNumber = '0918337071';
+    window.location.href = `tel:${phoneNumber}`;
+    console.log(`Phone call initiated: ${phoneNumber}`);
+}
+
+// Email
+function sendEmail() {
+    const email = 'anmy1909@gmail.com';
+    const subject = encodeURIComponent('Liên hệ từ website ANARO Coffee');
+    const body = encodeURIComponent('Chào ANARO Coffee,\n\nTôi muốn liên hệ về...\n\nTrân trọng,');
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    console.log(`Email composed to: ${email}`);
+}
+
+// Social media tracking
+function trackSocialClick(platform) {
+    console.log(`Social media clicked: ${platform}`);
+}
+
+// Enhanced interactions
+document.addEventListener('DOMContentLoaded', function() {
+    // Social links hover effects
+    const socialLinks = document.querySelectorAll('.social-link');
+    socialLinks.forEach(link => {
+        link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.1)';
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+
+    // Map loading effect
+    const mapPlaceholder = document.querySelector('.map-placeholder');
+    if (mapPlaceholder) {
+        mapPlaceholder.addEventListener('click', function() {
+            const originalContent = this.innerHTML;
+            
+            this.innerHTML = `
+                <div>
+                    <div>
+                        <span style="animation: spin 1s linear infinite; display: inline-block;">🔄</span>
+                        Đang mở bản đồ...
+                    </div>
+                    <small>Vui lòng chờ</small>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                this.innerHTML = originalContent;
+            }, 2000);
+        });
+    }
+});
+</script>
+</body></html>
