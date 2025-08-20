@@ -33,10 +33,10 @@
     footer{margin-top:24px;color:#6e625a;font-size:12px;text-align:center}
     .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#2a221d;color:#fff;padding:10px 14px;border-radius:10px;z-index:9999}
 
-    /* Payment Methods */
+    /* Payment Methods - Updated styling for single option */
     .payment-methods{margin-top:12px}
-    .payment-option{display:flex;gap:8px;align-items:center;padding:10px;border:1px solid #0001;border-radius:10px;margin-bottom:8px;cursor:pointer;background:#0001}
-    .payment-option.selected{border-color:var(--brand);background:#F8EBDD}
+    .payment-info{display:flex;gap:8px;align-items:center;padding:12px;border:1px solid var(--brand);border-radius:10px;background:#F8EBDD;margin-bottom:8px}
+    .payment-info .ico{color:var(--brand)}
 
     /* Popup modal */
     .backdrop{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:1000}
@@ -58,6 +58,10 @@
     .copy-btn:hover{background:#e6d4c4}
     .transfer-amount{margin-top:16px;padding:12px;background:#fff3cd;border:1px solid #ffeaa7;border-radius:10px}
     .amount-info .detail-row{margin:6px 0}
+    
+    /* Order code display */
+    .order-code{margin-top:8px;padding:8px 12px;background:#f0f8f0;border:1px solid #d4e6f1;border-radius:8px;text-align:center}
+    .order-code strong{color:var(--brand);font-size:14px}
   
     @media (max-width: 768px) {
       .grid{grid-template-columns:1fr}
@@ -98,8 +102,8 @@
         </div>
         <div class="row2" style="margin-top:10px">
           <div>
-            <label for="email">Email</label>
-            <input id="email" type="email" placeholder="you@example.com" />
+            <label for="email">Email *</label>
+            <input id="email" type="email" placeholder="you@example.com" required />
             <div class="error" id="emailError"></div>
           </div>
           <div>
@@ -118,17 +122,14 @@
           <textarea id="note" placeholder="Ghi chú thêm (khung giờ nhận, địa chỉ chi tiết, v.v.)"></textarea>
         </div>
 
-        <!-- Payment Methods -->
+        <!-- Payment Methods - Only Transfer -->
         <h3 class="title" style="margin-top:14px">Phương thức thanh toán</h3>
         <div class="payment-methods">
-          <label class="payment-option selected">
-            <input type="radio" name="payment" value="cod" checked />
-            <span>💵 Thanh toán khi nhận hàng (COD)</span>
-          </label>
-          <label class="payment-option">
-            <input type="radio" name="payment" value="transfer" />
-            <span>📱 Chuyển khoản (Momo/VCB/MB)</span>
-          </label>
+          <div class="payment-info">
+            <span class="ico">📱</span>
+            <span><strong>Chuyển khoản ngân hàng</strong> - Momo/VCB/MBBank</span>
+          </div>
+          <input type="hidden" name="payment" value="transfer" />
         </div>
 
         <h3 class="title" style="margin-top:14px">Liên hệ / Xác nhận đơn</h3>
@@ -157,6 +158,9 @@
       <!-- RIGHT: Order Summary -->
       <section class="card">
         <h2 class="title">Đơn hàng</h2>
+        <div class="order-code" id="orderCodeDisplay" style="display:none">
+          <strong>Mã đơn hàng: <span id="currentOrderCode"></span></strong>
+        </div>
         <div class="line"><strong>Tiền hàng</strong><span id="co-subtotal">0đ</span></div>
         <div class="line"><span>Cân nặng</span><span id="co-weight">0 kg</span></div>
         <div class="line"><span>Phí ship</span><span id="co-ship">0đ</span></div>
@@ -176,6 +180,9 @@
     <div class="modal">
       <h3 id="okTitle">🎉 Đặt hàng thành công</h3>
       <p id="okSub">Cảm ơn bạn! Chúng tôi sẽ liên hệ xác nhận sớm nhất.</p>
+      <div class="order-code">
+        <strong>Mã đơn hàng của bạn: <span id="successOrderCode"></span></strong>
+      </div>
       <div class="row">
         <a class="btn" href="index.html">← Tiếp tục mua</a>
         <a id="okZalo" class="btn" target="_blank" rel="noopener">Zalo</a>
@@ -283,8 +290,35 @@
       fanpage: "https://www.facebook.com/anarocoffee/"
     };
 
+    // Danh sách đầu số di động hợp lệ tại Việt Nam
+    const VALID_PREFIXES = [
+      // Viettel: 032, 033, 034, 035, 036, 037, 038, 039, 096, 097, 098, 086
+      '032', '033', '034', '035', '036', '037', '038', '039', '096', '097', '098', '086',
+      // VinaPhone: 088, 091, 094, 083, 084, 085, 081, 082
+      '088', '091', '094', '083', '084', '085', '081', '082',
+      // MobiFone: 089, 090, '093', 070, 079, 077, 076, 078
+      '089', '090', '093', '070', '079', '077', '076', '078',
+      // Vietnamobile: 092, 056, 058
+      '092', '056', '058',
+      // GMobile: 099, 059
+      '099', '059',
+      // Itelecom: 087
+      '087',
+      // Reddi: 055
+      '055'
+    ];
+
+    // Global order code variable
+    let currentOrderCode = '';
+
     // ====== Helpers ======
     const fmt = n => (n||0).toLocaleString('vi-VN') + "đ";
+    
+    function generateOrderCode() {
+      const timestamp = Date.now().toString();
+      const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      return 'ANARO' + timestamp.slice(-6) + random.slice(-2);
+    }
     
     function showToast(msg, type = 'info'){
       const t = document.createElement('div'); 
@@ -307,17 +341,23 @@
     function showQRModal(){
       const payload = readPayloadFromHash();
       const total = payload ? payload.total : 0;
-      const orderCode = 'ANARO' + Date.now().toString().slice(-6);
+      currentOrderCode = generateOrderCode();
       
       // Update transfer amount and content
       document.getElementById('transferAmount').textContent = fmt(total);
-      document.getElementById('transferContent').textContent = orderCode;
+      document.getElementById('transferContent').textContent = currentOrderCode;
+      
+      // Show order code in summary
+      document.getElementById('currentOrderCode').textContent = currentOrderCode;
+      document.getElementById('orderCodeDisplay').style.display = 'block';
       
       document.getElementById('qrBackdrop').style.display = 'flex';
     }
 
     function hideQRModal(){
       document.getElementById('qrBackdrop').style.display = 'none';
+      // Hide order code when modal is closed
+      document.getElementById('orderCodeDisplay').style.display = 'none';
     }
 
     function copyToClipboard(text) {
@@ -367,15 +407,6 @@
       if(e.target.id==='qrBackdrop') hideQRModal();
     });
 
-    // Payment method selection
-    document.querySelectorAll('.payment-option').forEach(option => {
-      option.addEventListener('click', () => {
-        document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
-        option.classList.add('selected');
-        option.querySelector('input').checked = true;
-      });
-    });
-
     function readPayloadFromHash(){
       try{
         const m = location.hash.match(/[#&]p=([^&]+)/);
@@ -415,6 +446,24 @@
       document.getElementById('co-items').innerHTML = lines || '';
     }
 
+    function validatePhoneNumber(phone) {
+      // Remove all non-digit characters
+      const cleanPhone = phone.replace(/\D/g, '');
+      
+      // Check if phone starts with 0 and has 10 digits
+      if (!/^0\d{9}$/.test(cleanPhone)) {
+        return { valid: false, message: 'Số điện thoại phải có 10 chữ số và bắt đầu bằng 0' };
+      }
+      
+      // Check if prefix is valid
+      const prefix = cleanPhone.substring(0, 3);
+      if (!VALID_PREFIXES.includes(prefix)) {
+        return { valid: false, message: 'Đầu số điện thoại không hợp lệ tại Việt Nam' };
+      }
+      
+      return { valid: true, message: '' };
+    }
+
     function validateForm(){
       let isValid = true;
       const errors = {};
@@ -426,13 +475,27 @@
         isValid = false;
       }
 
+      // Validate email (now required)
+      const email = document.getElementById('email').value.trim();
+      if(!email) {
+        errors.email = 'Email không được để trống';
+        isValid = false;
+      } else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        errors.email = 'Email không hợp lệ';
+        isValid = false;
+      }
+
+      // Validate phone with Vietnamese prefixes
       const phone = document.getElementById('phone').value.trim();
       if(!phone) {
         errors.phone = 'Số điện thoại không được để trống';
         isValid = false;
-      } else if(!/^[0-9]{10,11}$/.test(phone.replace(/\s/g, ''))) {
-        errors.phone = 'Số điện thoại không hợp lệ';
-        isValid = false;
+      } else {
+        const phoneValidation = validatePhoneNumber(phone);
+        if(!phoneValidation.valid) {
+          errors.phone = phoneValidation.message;
+          isValid = false;
+        }
       }
 
       const address = document.getElementById('address').value.trim();
@@ -441,14 +504,7 @@
         isValid = false;
       }
 
-      // Validate email if provided
-      const email = document.getElementById('email').value.trim();
-      if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        errors.email = 'Email không hợp lệ';
-        isValid = false;
-      }
-
-      // Display errors
+      // Display errors and update UI
       Object.keys(errors).forEach(field => {
         const errorEl = document.getElementById(field + 'Error');
         const inputEl = document.getElementById(field);
@@ -459,7 +515,7 @@
         }
       });
 
-      // Clear errors for valid fields
+      // Clear errors for valid fields and mark as valid
       ['recipient', 'phone', 'address', 'email'].forEach(field => {
         if(!errors[field]) {
           const errorEl = document.getElementById(field + 'Error');
@@ -467,7 +523,11 @@
           if(errorEl) errorEl.textContent = '';
           if(inputEl) {
             inputEl.classList.remove('required');
-            inputEl.classList.add('valid');
+            if(inputEl.value.trim()) {
+              inputEl.classList.add('valid');
+            } else {
+              inputEl.classList.remove('valid');
+            }
           }
         }
       });
@@ -482,9 +542,73 @@
       const address = document.getElementById('address').value.trim();
       const note = document.getElementById('note').value.trim();
       const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Anh';
-      const payment = document.querySelector('input[name="payment"]:checked')?.value || 'cod';
+      const payment = 'transfer'; // Always transfer now
       
       return { name, email, phone, address, note, gender, payment };
+    }
+
+    // Real-time validation for phone number
+    function setupRealTimeValidation() {
+      const phoneInput = document.getElementById('phone');
+      
+      phoneInput.addEventListener('input', function() {
+        const phone = this.value.trim();
+        const errorEl = document.getElementById('phoneError');
+        
+        if(!phone) {
+          this.classList.remove('valid', 'required');
+          errorEl.textContent = '';
+        } else {
+          const phoneValidation = validatePhoneNumber(phone);
+          if(!phoneValidation.valid) {
+            this.classList.remove('valid');
+            this.classList.add('required');
+            errorEl.textContent = phoneValidation.message;
+          } else {
+            this.classList.remove('required');
+            this.classList.add('valid');
+            errorEl.textContent = '';
+          }
+        }
+      });
+
+      // Real-time validation for other required fields
+      ['recipient', 'address'].forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        input.addEventListener('input', function() {
+          const value = this.value.trim();
+          const errorEl = document.getElementById(fieldId + 'Error');
+          
+          if(!value) {
+            this.classList.remove('valid', 'required');
+            errorEl.textContent = '';
+          } else {
+            this.classList.remove('required');
+            this.classList.add('valid');
+            errorEl.textContent = '';
+          }
+        });
+      });
+
+      // Email validation (now required)
+      const emailInput = document.getElementById('email');
+      emailInput.addEventListener('input', function() {
+        const email = this.value.trim();
+        const errorEl = document.getElementById('emailError');
+        
+        if(!email) {
+          this.classList.remove('valid', 'required');
+          errorEl.textContent = '';
+        } else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          this.classList.remove('valid');
+          this.classList.add('required');
+          errorEl.textContent = 'Email không hợp lệ';
+        } else {
+          this.classList.remove('required');
+          this.classList.add('valid');
+          errorEl.textContent = '';
+        }
+      });
     }
 
     // Fixed JSONP function để tránh CORS
@@ -554,18 +678,18 @@
           _template: "table",
           _captcha: false,
           _next: window.location.href,
+          "Mã đơn hàng": orderData.orderCode || 'N/A',
           "Người nhận": `${r.gender||""} ${r.name||""}`.trim(),
           "Email": r.email||"N/A",
           "SĐT": r.phone||"",
           "Địa chỉ": r.address||"",
           "Ghi chú": r.note||"N/A",
-          "Phương thức TT": r.payment === 'cod' ? 'COD' : 'Chuyển khoản',
+          "Phương thức TT": "Chuyển khoản",
           "Tiền hàng": fmt(orderData.subtotal||0),
           "Phí ship": fmt(orderData.shipping||0),
           "Tổng": fmt(orderData.total||0),
           "Cân nặng (kg)": (orderData.weightKg||0),
           "Chi tiết": itemsStr,
-          "Mã đơn": orderData.orderCode || 'N/A',
           "Thời gian": new Date().toLocaleString('vi-VN')
         };
 
@@ -614,7 +738,7 @@
           recipient: formData,
           contact: { ...SOCIAL_LINKS },
           orderTime: new Date().toISOString(),
-          orderCode: 'ANARO' + Date.now().toString().slice(-6)
+          orderCode: currentOrderCode || generateOrderCode()
         };
 
         console.log('🚀 Processing order:', orderData);
@@ -648,6 +772,9 @@
 
         // Show success if at least one method worked
         if (sheetsSuccess || emailSuccess) {
+          // Update success popup with order code
+          document.getElementById('successOrderCode').textContent = orderData.orderCode;
+          
           // Clear form
           document.getElementById('recipient').value = '';
           document.getElementById('email').value = '';
@@ -655,10 +782,19 @@
           document.getElementById('address').value = '';
           document.getElementById('note').value = '';
           
-          // Reset payment method to COD
-          document.querySelector('input[name="payment"][value="cod"]').checked = true;
-          document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
-          document.querySelector('.payment-option').classList.add('selected');
+          // Clear validation classes
+          ['recipient', 'email', 'phone', 'address'].forEach(fieldId => {
+            const input = document.getElementById(fieldId);
+            const error = document.getElementById(fieldId + 'Error');
+            if(input) input.classList.remove('valid', 'required');
+            if(error) error.textContent = '';
+          });
+          
+          // Reset gender to default
+          document.querySelector('input[name="gender"][value="Anh"]').checked = true;
+          
+          // Hide order code display
+          document.getElementById('orderCodeDisplay').style.display = 'none';
           
           // Show success popup
           showPopup();
@@ -692,24 +828,17 @@
 
     document.getElementById('placeOrder').addEventListener('click', async ()=>{
       if(!validateForm()) {
-        showToast("Vui lòng điền đầy đủ thông tin bắt buộc", 'error');
+        showToast("Vui lòng điền đầy đủ thông tin bắt buộc và kiểm tra lại thông tin", 'error');
         return;
       }
 
-      const payment = document.querySelector('input[name="payment"]:checked')?.value;
-      
-      if(payment === 'transfer') {
-        showQRModal();
-      } else {
-        processOrder();
-      }
+      // Since we only have transfer payment method now, always show QR modal
+      showQRModal();
     });
 
     // Initialize
     (function init(){
       bindSocialLinks();
       renderOrderSummary(readPayloadFromHash());
+      setupRealTimeValidation();
     })();
-  </script>
-</body>
-</html>
