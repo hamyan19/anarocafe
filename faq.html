@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FAQ — Câu hỏi thường gặp | ANARO Coffee</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FAQ — Câu hỏi thường gặp về Cà phê Việt Nam</title>
   <style>
     :root{
       --bg:#f6efe9; --text:#2a221d; --panel:#a47148; --ink:#F8EBDD;
@@ -15,104 +15,400 @@
     .wrap{max-width:900px;margin:24px auto;padding:0 16px}
     header.page{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:8px}
     header h1{margin:0;font-size:24px}
-    .home{color:#6b3f25;text-decoration:none;border:1px solid #0001;padding:8px 10px;border-radius:10px;background:#0001;font-weight:700}
     .intro{margin:6px 0 14px;color:#6a5c54}
-    .search{display:flex;gap:8px}
+    .search{display:flex;gap:8px;margin-bottom:16px}
     .search input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border)}
     .badge{display:inline-flex;align-items:center;gap:6px;background:#a47148;color:var(--ink);padding:6px 10px;border-radius:10px;font-weight:700}
     .sec{margin:16px 0 24px}
     .sec h2{font-size:18px;margin:0 0 10px;background:#a47148cc;color:var(--ink);padding:10px 14px;border-radius:12px}
-    /* Accordion */
     .qa{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:8px 0}
-    .qa summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:700}
+    .qa summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
     .qa summary::marker{display:none}
+    .qa summary::after{content:'▼';transition:transform 0.2s}
     .qa[open] summary{background:#00000007}
-    .qa .a{padding:0 16px 14px 16px;color:#5b4a40}
+    .qa[open] summary::after{transform:rotate(180deg)}
+    .qa .a{padding:0 16px 14px 16px;color:#5b4a40;line-height:1.5}
     .highlight{background:#fff6ee;border:1px dashed var(--border);border-radius:10px;padding:10px 12px;margin:8px 0}
-    .muted{opacity:.8}
     .footer{margin:24px 0 12px;text-align:center;color:#806a5b}
     .chipnav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
     .chipnav a{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #0001;background:#0001;color:#6b3f25;text-decoration:none;font-weight:700}
+    .strong{font-weight:700;color:#a47148}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="page">
-      <h1>❓ Câu hỏi thường gặp</h1>
-      <a class="home" href="index.html">← Về danh mục</a>
+      <h1>☕ FAQ Cà phê Việt Nam</h1>
     </header>
 
-    <p class="intro">Tổng hợp những thắc mắc phổ biến về chọn gu, cách pha và bảo quản. Bạn có thể gõ từ khoá để lọc nhanh hoặc nhảy đến mục theo dòng sản phẩm.</p>
+    <p class="intro">Tổng hợp các câu hỏi thường gặp về cà phê từ chọn hạt, cách pha, bảo quản đến tác động sức khỏe. Gõ từ khóa để tìm kiếm nhanh.</p>
 
     <div class="search">
-      <input id="q" type="search" placeholder="Tìm: phin, espresso, tẩm bơ, caffeine, bảo quản…">
-      <span class="badge" id="scope">Phạm vi: Tất cả</span>
+      <input id="q" type="search" placeholder="Tìm kiếm: phin, robusta, caffeine, bảo quản...">
+      <span class="badge" id="results">Hiển thị tất cả</span>
     </div>
 
-    <nav class="chipnav" aria-label="Đi đến theo dòng">
-      <a href="#arabica-cau-dat">Arabica Cầu Đất</a>
-      <a href="#arabica-da-lat">Arabica Đà Lạt</a>
-      <a href="#blend-3">Blend Số 3</a>
-      <a href="#blend-9">Blend Số 9</a>
-      <a href="#blend-2">Blend Số 2</a>
-      <a href="#blend-10">Blend Số 10</a>
-      <a href="#tam-bo-6">Tẩm bơ Số 6</a>
-      <a href="#tam-bo-7">Tẩm bơ Số 7</a>
-      <a href="#robusta-honey">Robusta Honey</a>
-      <a href="#robusta-moc">Robusta Mộc</a>
-      <a href="#culi-moc">Culi Mộc</a>
+    <nav class="chipnav">
+      <a href="#food-pairing">Kết hợp thực phẩm</a>
+      <a href="#flavor-quality">Hương vị & Chất lượng</a>
+      <a href="#brewing-equipment">Pha chế & Dụng cụ</a>
+      <a href="#health-effects">Tác động sức khỏe</a>
+      <a href="#customization">Tùy chỉnh cá nhân</a>
     </nav>
 
-    <!-- Một số mục FAQ mẫu -->
-    <section class="sec" id="chung">
-      <h2>Chung</h2>
-      <details class="qa"><summary>Arabica và Robusta khác gì?</summary>
+    <section class="sec" id="food-pairing">
+      <h2>🥐 Kết hợp với thực phẩm</h2>
+      
+      <details class="qa">
+        <summary>Cà phê đen nên ăn kèm với bánh gì cho ngon?</summary>
         <div class="a">
-          Arabica hương đa dạng (trái cây, hoa), vị chua thanh; Robusta body dày, đắng rõ, caffeine cao. Blend kết hợp để cân bằng mùi và lực.
+          <span class="strong">Gợi ý:</span> Bánh quy bơ, bánh croissant, bánh mì nướng bơ, hay bánh bông lan nhẹ. Tránh bánh quá ngọt để không che lấp hương vị cà phê.
         </div>
       </details>
-      <details class="qa"><summary>Chọn gu thế nào cho người mới?</summary>
+
+      <details class="qa">
+        <summary>Tại sao người Việt thường uống cà phê với bánh mì nướng bơ?</summary>
         <div class="a">
-          <div class="highlight">Gợi ý nhanh: <b>Êm nhẹ – Thanh</b> nếu thích mùi hương và uống nhẹ; <b>Cân bằng – Tròn vị</b> nếu hay uống sữa; <b>Đậm mạnh – Hậu dài</b> nếu thích lực mạnh.</div>
+          Bánh mì nướng bơ có vị béo ngậy giúp <span class="strong">cân bằng độ đắng</span> của cà phê, tạo cảm giác no nhẹ mà không quá nặng bụng. Đây là combo truyền thống phù hợp với khẩu vị Việt.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê sữa đá có phù hợp với bánh ngọt không?</summary>
+        <div class="a">
+          <span class="strong">Có</span>, nhưng nên chọn bánh ngọt vừa phải như flan, bánh bông lan. Tránh bánh quá ngọt vì cà phê sữa đã có độ ngọt cao.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Uống cà phê buổi sáng nên ăn kèm gì?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">Buổi sáng:</span> Bánh mì, croissant, bánh quy. <br>
+            <span class="strong">Chiều:</span> Bánh ngọt nhẹ, flan, bánh bông lan.
+          </div>
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Có nên ăn trước hay uống cà phê trước?</summary>
+        <div class="a">
+          Nên <span class="strong">ăn một chút trước</span> để tránh cà phê gây kích ứng dạ dày. Sau đó vừa ăn vừa uống để cân bằng hương vị.
         </div>
       </details>
     </section>
 
-    <section class="sec" id="arabica-cau-dat">
-      <h2>Arabica Cầu Đất</h2>
-      <details class="qa"><summary>Gu phù hợp và thời điểm uống?</summary><div class="a">Hương trái cây tự nhiên, nhẹ nhàng. Hợp uống sáng/đầu chiều.</div></details>
-      <details class="qa"><summary>Pha thế nào cho thơm?</summary><div class="a">Phin hoặc Pour Over 1:12–1:15; nước 92–95°C. Espresso 1:2 trong ~28–32s.</div></details>
+    <section class="sec" id="flavor-quality">
+      <h2>🌱 Hương vị và chất lượng cà phê</h2>
+      
+      <details class="qa">
+        <summary>Robusta và Arabica khác nhau như thế nào?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">Robusta:</span> Đắng mạnh, caffeine cao (2-3%), body dày, giá rẻ<br>
+            <span class="strong">Arabica:</span> Hương phức tạp, vị chua nhẹ, caffeine thấp (1-1.5%), giá cao hơn
+          </div>
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Tại sao người Việt thích cà phê Robusta?</summary>
+        <div class="a">
+          Robusta có <span class="strong">vị đắng đậm đà</span> phù hợp với khẩu vị Việt, body dày khi pha phin, và giá cả phải chăng. Khi pha với sữa đặc tạo độ cân bằng hoàn hảo.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê rang nhạt và rang đậm khác nhau gì?</summary>
+        <div class="a">
+          <span class="strong">Rang nhạt:</span> Giữ được hương tự nhiên, vị chua rõ<br>
+          <span class="strong">Rang đậm:</span> Vị đắng mạnh, hương rang nổi trội, ít chua
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Làm sao biết cà phê đã rang quá kỹ?</summary>
+        <div class="a">
+          Hạt cà phê <span class="strong">có màu đen bóng</span>, bề mặt nhiều dầu, vị đắng cháy, mất hết hương tự nhiên. Khi pha có vị khét và không thơm.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê ngon phải có mùi như thế nào?</summary>
+        <div class="a">
+          <span class="strong">Hương thơm tự nhiên</span> không bị cháy khét, có thể là hương chocolate, caramel, hay trái cây tùy loại hạt. Tránh mùi chua, mốc hay quá gắt.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê Buôn Ma Thuột có gì đặc biệt?</summary>
+        <div class="a">
+          <span class="strong">Đất đỏ bazan</span> và khí hậu cao nguyên tạo nên hương vị đặc trưng. Robusta Buôn Ma Thuột có độ đắng cân bằng, body dày và hương thơm đặc biệt.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phể rang xay để bao lâu thì hết ngon?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">Hạt rang:</span> 2-4 tuần<br>
+            <span class="strong">Bột xay:</span> 1-2 tuần<br>
+            Bảo quản nơi khô ráo, tránh ánh sáng trực tiếp
+          </div>
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Có nên để cà phê trong tủ lạnh không?</summary>
+        <div class="a">
+          <span class="strong">Không nên</span>. Độ ẩm trong tủ lạnh làm cà phê bị ẩm mốc và hút mùi thức ăn khác. Chỉ nên bảo quản ở nhiệt độ phòng, hộp kín.
+        </div>
+      </details>
     </section>
 
-    <!-- ... các mục khác tương tự ... -->
+    <section class="sec" id="brewing-equipment">
+      <h2>☕ Phương pháp pha chế và dụng cụ</h2>
+      
+      <details class="qa">
+        <summary>Phin inox hay phin nhôm tốt hơn?</summary>
+        <div class="a">
+          <span class="strong">Phin inox:</span> Bền, không gỉ, giữ nhiệt tốt, dễ vệ sinh<br>
+          <span class="strong">Phin nhôm:</span> Nhẹ, rẻ, dẫn nhiệt nhanh nhưng dễ gỉ
+        </div>
+      </details>
 
-    <div class="footer">ANARO Coffee Guide · © 2025</div>
+      <details class="qa">
+        <summary>Làm sao pha phin cà phê đúng cách?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">Bước 1:</span> Cho 2-3 thìa cà phê vào phin<br>
+            <span class="strong">Bước 2:</span> Ấn nhẹ, đổ ít nước nóng (90-95°C) ủ 30s<br>
+            <span class="strong">Bước 3:</span> Đổ thêm nước, để nhỏ giọt 4-6 phút
+          </div>
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Tại sao cà phê phin của tôi nhạt quá?</summary>
+        <div class="a">
+          <span class="strong">Nguyên nhân:</span> Ít cà phê, xay quá thô, nước không đủ nóng, hoặc thời gian pha quá nhanh. Tăng lượng bột hoặc ép chặt hơn.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Tỷ lệ cà phê và nước chuẩn là bao nhiêu?</summary>
+        <div class="a">
+          <span class="strong">Phin:</span> 1:8 đến 1:10 (15-20g cà phê cho 150ml nước)<br>
+          <span class="strong">Espresso:</span> 1:2 (18g cà phê cho 36ml)<br>
+          <span class="strong">Pour over:</span> 1:15 đến 1:17
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Máy espresso có pha được cà phê kiểu Việt không?</summary>
+        <div class="a">
+          <span class="strong">Có</span>, nhưng cần điều chỉnh: dùng cà phê xay mịn hơn, tăng thời gian chiết xuất, có thể pha double shot để có độ đậm như phin.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Tại sao cà phê tôi pha bị chua?</summary>
+        <div class="a">
+          <span class="strong">Nguyên nhân:</span> Xay quá thô, nước không đủ nóng (dưới 85°C), hoặc thời gian pha quá ngắn. <span class="strong">Khắc phục:</span> Xay mịn hơn, tăng nhiệt độ nước.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Làm sao khắc phục cà phê quá đắng?</summary>
+        <div class="a">
+          <span class="strong">Giải pháp:</span> Xay thô hơn, giảm thời gian pha, hạ nhiệt độ nước xuống 85-90°C, hoặc giảm lượng cà phê.
+        </div>
+      </details>
+    </section>
+
+    <section class="sec" id="health-effects">
+      <h2>💊 Tác động sức khỏe cá nhân</h2>
+      
+      <details class="qa">
+        <summary>Một ly cà phê phin có bao nhiều caffeine?</summary>
+        <div class="a">
+          <span class="strong">Cà phê phin:</span> 80-120mg caffeine/ly<br>
+          <span class="strong">Espresso:</span> 60-80mg/shot<br>
+          <span class="strong">Cà phê sữa:</span> 60-100mg/ly (do có sữa pha loãng)
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Bao nhiêu ly cà phê một ngày là quá nhiều?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">An toàn:</span> 3-4 ly/ngày (400mg caffeine)<br>
+            <span class="strong">Cảnh báo:</span> Trên 6 ly có thể gây run tay, mất ngủ, lo âu
+          </div>
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê có ảnh hưởng đến giấc ngủ không?</summary>
+        <div class="a">
+          <span class="strong">Có</span>. Caffeine tồn tại trong cơ thể 6-8 tiếng. Tránh uống cà phê sau 2h chiều để không ảnh hưởng giấc ngủ đêm.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Tại sao uống cà phê tôi bị đau đầu?</summary>
+        <div class="a">
+          <span class="strong">Nguyên nhân:</span> Uống quá nhiều, thiếu nước, hoặc cai caffeine đột ngột. Giảm dần lượng caffeine và uống nhiều nước.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Uống cà phê có giúp giảm cân không?</summary>
+        <div class="a">
+          Caffeine có thể <span class="strong">tăng trao đổi chất</span> tạm thời, nhưng hiệu quả giảm cân chủ yếu từ chế độ ăn và vận động. Cà phê sữa đường lại tăng cân.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Phụ nữ có thai có nên uống cà phê không?</summary>
+        <div class="a">
+          <span class="strong">Hạn chế dưới 200mg caffeine/ngày</span> (1-2 ly nhỏ). Tốt nhất nên tham khảo ý kiến bác sĩ để đảm bảo an toàn cho mẹ và bé.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Có nên uống cà phê khi bụng đói không?</summary>
+        <div class="a">
+          <span class="strong">Không nên</span>. Cà phê có thể gây kích ứng dạ dày, đau bụng. Nên ăn nhẹ trước khi uống cà phê.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Nên uống cà phê lúc nào trong ngày?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">Tốt nhất:</span> 9-11h sáng và 1-2h chiều<br>
+            <span class="strong">Tránh:</span> Sáng sớm khi thức dậy và sau 2h chiều
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="sec" id="customization">
+      <h2>⚙️ Tùy chỉnh cá nhân</h2>
+      
+      <details class="qa">
+        <summary>Nên cho bao nhiêu sữa đặc vào cà phê?</summary>
+        <div class="a">
+          <span class="strong">Chuẩn:</span> 2-3 thìa cho 1 ly phin<br>
+          Điều chỉnh theo khẩu vị: ít hơn nếu thích đắng, nhiều hơn nếu thích ngọt
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Có nên thay sữa đặc bằng sữa tươi không?</summary>
+        <div class="a">
+          <span class="strong">Được</span>, nhưng vị sẽ khác: nhẹ hơn, ít ngọt hơn. Có thể thêm đường để tăng độ ngọt nếu cần.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Làm sao để pha cà phê đậm mà không đắng?</summary>
+        <div class="a">
+          <span class="strong">Mẹo:</span> Dùng nhiều cà phê nhưng xay thô hơn, nước 90°C thay vì 95°C, thời gian pha ngắn hơn.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê nóng hay cà phê đá ngon hơn?</summary>
+        <div class="a">
+          <span class="strong">Tùy thời tiết:</span><br>
+          Cà phê nóng giữ được hương thơm, phù hợp thời tiết mát<br>
+          Cà phê đá mát lạnh, giải khát, hợp thời tiết nóng
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê trứng làm thế nào cho ngon?</summary>
+        <div class="a">
+          <div class="highlight">
+            <span class="strong">Công thức:</span> 1 lòng đỏ trứng + 1 thìa sữa đặc + 1 thìa đường<br>
+            Đánh bông trong 5-7 phút, cho lên cà phê đen đậm
+          </div>
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Cà phê bạc xỉu khác gì với cà phê sữa?</summary>
+        <div class="a">
+          <span class="strong">Bạc xỉu:</span> Nhiều sữa hơn cà phê (70% sữa, 30% cà phê)<br>
+          <span class="strong">Cà phê sữa:</span> Cà phê chủ đạo (60% cà phê, 40% sữa)
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Làm sao tìm ra công thức cà phê phù hợp với mình?</summary>
+        <div class="a">
+          <span class="strong">Thử nghiệm từ từ:</span> Bắt đầu tỷ lệ chuẩn, sau đó điều chỉnh lượng cà phê, sữa, đường cho đến khi tìm được vị ưng ý nhất.
+        </div>
+      </details>
+
+      <details class="qa">
+        <summary>Mùa hè nên uống cà phê như thế nào?</summary>
+        <div class="a">
+          <span class="strong">Gợi ý mùa hè:</span> Cà phê đá, cold brew, cà phê cốt dừa. Tránh uống quá nóng và quá đậm vào ban ngày.
+        </div>
+      </details>
+    </section>
+
+    <div class="footer">☕ FAQ Cà phê Việt Nam · Cẩm nang từ A-Z</div>
   </div>
 
   <script>
-    // Lọc theo từ khoá
+    // Tìm kiếm FAQ
     const input = document.getElementById('q');
+    const resultsSpan = document.getElementById('results');
+    
     input.addEventListener('input', () => {
-      const q = input.value.toLowerCase().trim();
-      document.querySelectorAll('.qa').forEach(d => {
-        const text = d.textContent.toLowerCase();
-        d.style.display = q ? (text.includes(q) ? '' : 'none') : '';
+      const query = input.value.toLowerCase().trim();
+      const allQA = document.querySelectorAll('.qa');
+      let visibleCount = 0;
+      
+      allQA.forEach(qa => {
+        const text = qa.textContent.toLowerCase();
+        const isVisible = query === '' || text.includes(query);
+        qa.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleCount++;
+      });
+      
+      resultsSpan.textContent = query === '' ? 'Hiển thị tất cả' : `${visibleCount} kết quả`;
+    });
+
+    // Nhảy đến section khi click nav
+    document.querySelectorAll('.chipnav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Mở câu hỏi đầu tiên của section
+          const firstQA = target.querySelector('.qa');
+          if (firstQA) {
+            setTimeout(() => firstQA.open = true, 500);
+          }
+        }
       });
     });
 
-    // Nhảy đến mục theo ?id= trên URL
-    const params = new URLSearchParams(location.search);
-    const target = params.get('id');
-    if (target) {
-      const el = document.getElementById(target);
-      if (el) {
-        el.scrollIntoView({behavior:'smooth', block:'start'});
-        const first = el.querySelector('details.qa');
-        if (first) first.open = true;
-        const scope = document.getElementById('scope');
-        if (scope) scope.textContent = 'Phạm vi: ' + el.querySelector('h2').textContent;
-      }
-    }
+    // Mở/đóng tất cả FAQ khi double-click header
+    document.querySelectorAll('.sec h2').forEach(header => {
+      header.addEventListener('dblclick', () => {
+        const section = header.parentElement;
+        const allDetails = section.querySelectorAll('details');
+        const isAnyOpen = Array.from(allDetails).some(d => d.open);
+        allDetails.forEach(d => d.open = !isAnyOpen);
+      });
+    });
   </script>
 </body>
 </html>
