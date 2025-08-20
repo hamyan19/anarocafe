@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FAQ — Câu hỏi thường gặp | ANARO Coffee</title>
+  <style>
+    :root{
+      --bg:#f6efe9; --text:#2a221d; --panel:#a47148; --ink:#F8EBDD;
+      --card:#ffffff; --border:#e9d7c5;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+         background:linear-gradient(180deg,#fff,#f6efe9 50%,#f0e2d6);color:var(--text)}
+    .wrap{max-width:900px;margin:24px auto;padding:0 16px}
+    header.page{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:8px}
+    header h1{margin:0;font-size:24px}
+    .home{color:#6b3f25;text-decoration:none;border:1px solid #0001;padding:8px 10px;border-radius:10px;background:#0001;font-weight:700}
+    .intro{margin:6px 0 14px;color:#6a5c54}
+    .search{display:flex;gap:8px}
+    .search input{flex:1;padding:10px 12px;border-radius:10px;border:1px solid var(--border)}
+    .badge{display:inline-flex;align-items:center;gap:6px;background:#a47148;color:var(--ink);padding:6px 10px;border-radius:10px;font-weight:700}
+    .sec{margin:16px 0 24px}
+    .sec h2{font-size:18px;margin:0 0 10px;background:#a47148cc;color:var(--ink);padding:10px 14px;border-radius:12px}
+    /* Accordion */
+    .qa{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:8px 0}
+    .qa summary{list-style:none;cursor:pointer;padding:14px 16px;font-weight:700}
+    .qa summary::marker{display:none}
+    .qa[open] summary{background:#00000007}
+    .qa .a{padding:0 16px 14px 16px;color:#5b4a40}
+    .highlight{background:#fff6ee;border:1px dashed var(--border);border-radius:10px;padding:10px 12px;margin:8px 0}
+    .muted{opacity:.8}
+    .footer{margin:24px 0 12px;text-align:center;color:#806a5b}
+    .chipnav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+    .chipnav a{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #0001;background:#0001;color:#6b3f25;text-decoration:none;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="page">
+      <h1>❓ Câu hỏi thường gặp</h1>
+      <a class="home" href="index.html">← Về danh mục</a>
+    </header>
+
+    <p class="intro">Tổng hợp những thắc mắc phổ biến về chọn gu, cách pha và bảo quản. Bạn có thể gõ từ khoá để lọc nhanh hoặc nhảy đến mục theo dòng sản phẩm.</p>
+
+    <div class="search">
+      <input id="q" type="search" placeholder="Tìm: phin, espresso, tẩm bơ, caffeine, bảo quản…">
+      <span class="badge" id="scope">Phạm vi: Tất cả</span>
+    </div>
+
+    <nav class="chipnav" aria-label="Đi đến theo dòng">
+      <a href="#arabica-cau-dat">Arabica Cầu Đất</a>
+      <a href="#arabica-da-lat">Arabica Đà Lạt</a>
+      <a href="#blend-3">Blend Số 3</a>
+      <a href="#blend-9">Blend Số 9</a>
+      <a href="#blend-2">Blend Số 2</a>
+      <a href="#blend-10">Blend Số 10</a>
+      <a href="#tam-bo-6">Tẩm bơ Số 6</a>
+      <a href="#tam-bo-7">Tẩm bơ Số 7</a>
+      <a href="#robusta-honey">Robusta Honey</a>
+      <a href="#robusta-moc">Robusta Mộc</a>
+      <a href="#culi-moc">Culi Mộc</a>
+    </nav>
+
+    <!-- Một số mục FAQ mẫu -->
+    <section class="sec" id="chung">
+      <h2>Chung</h2>
+      <details class="qa"><summary>Arabica và Robusta khác gì?</summary>
+        <div class="a">
+          Arabica hương đa dạng (trái cây, hoa), vị chua thanh; Robusta body dày, đắng rõ, caffeine cao. Blend kết hợp để cân bằng mùi và lực.
+        </div>
+      </details>
+      <details class="qa"><summary>Chọn gu thế nào cho người mới?</summary>
+        <div class="a">
+          <div class="highlight">Gợi ý nhanh: <b>Êm nhẹ – Thanh</b> nếu thích mùi hương và uống nhẹ; <b>Cân bằng – Tròn vị</b> nếu hay uống sữa; <b>Đậm mạnh – Hậu dài</b> nếu thích lực mạnh.</div>
+        </div>
+      </details>
+    </section>
+
+    <section class="sec" id="arabica-cau-dat">
+      <h2>Arabica Cầu Đất</h2>
+      <details class="qa"><summary>Gu phù hợp và thời điểm uống?</summary><div class="a">Hương trái cây tự nhiên, nhẹ nhàng. Hợp uống sáng/đầu chiều.</div></details>
+      <details class="qa"><summary>Pha thế nào cho thơm?</summary><div class="a">Phin hoặc Pour Over 1:12–1:15; nước 92–95°C. Espresso 1:2 trong ~28–32s.</div></details>
+    </section>
+
+    <!-- ... các mục khác tương tự ... -->
+
+    <div class="footer">ANARO Coffee Guide · © 2025</div>
+  </div>
+
+  <script>
+    // Lọc theo từ khoá
+    const input = document.getElementById('q');
+    input.addEventListener('input', () => {
+      const q = input.value.toLowerCase().trim();
+      document.querySelectorAll('.qa').forEach(d => {
+        const text = d.textContent.toLowerCase();
+        d.style.display = q ? (text.includes(q) ? '' : 'none') : '';
+      });
+    });
+
+    // Nhảy đến mục theo ?id= trên URL
+    const params = new URLSearchParams(location.search);
+    const target = params.get('id');
+    if (target) {
+      const el = document.getElementById(target);
+      if (el) {
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+        const first = el.querySelector('details.qa');
+        if (first) first.open = true;
+        const scope = document.getElementById('scope');
+        if (scope) scope.textContent = 'Phạm vi: ' + el.querySelector('h2').textContent;
+      }
+    }
+  </script>
+</body>
+</html>
