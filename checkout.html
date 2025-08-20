@@ -53,6 +53,15 @@
     .qr-option{text-align:center;padding:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer}
     .qr-option:hover{background:#f5f5f5}
     .qr-code{width:200px;height:200px;background:#f0f0f0;margin:12px auto;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#666}
+
+    @media (max-width: 768px) {
+      .grid{grid-template-columns:1fr}
+      .row2{grid-template-columns:1fr}
+      .gender{grid-template-columns:1fr 1fr}
+      .srow{flex-direction:column}
+      .modal{width:95vw}
+      .qr-grid{grid-template-columns:1fr}
+    }
   </style>
 </head>
 <body>
@@ -211,9 +220,10 @@
     const FORM_EMAIL = "anmy1909@gmail.com"; 
     const FORM_ENDPOINT = "https://formsubmit.co/ajax/" + encodeURIComponent(FORM_EMAIL);
     
-    // Google Sheets endpoint - URL thực tế từ deployment
-    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/library/d/1Qa_IuCd8ZWEbowwaBmKRZlFj4evQj_fe9AgjTNGhG8zwV5NTaAfYOlmu/2";
-
+    // ⚠️ QUAN TRỌNG: Thay URL này bằng URL Web App thực tế từ Google Apps Script
+    // URL phải có dạng: https://script.google.com/macros/s/[SCRIPT_ID]/exec
+    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzNeAQvdDfass4qKYdS2C3PZtIVdRhlQp3rICd2a8H4f5qhOeGaq6dEvfiROLue2qjARA/exec";
+    
     // Social links
     const SOCIAL_LINKS = {
       zalo: "https://zalo.me/84918337071",
@@ -392,35 +402,61 @@
       return { name, email, phone, address, note, gender, payment };
     }
 
-    async function sendToGoogleSheets(orderData) {
-      try {
-        console.log('📊 Sending to Google Sheets:', orderData);
-        
-        const response = await fetch(GOOGLE_SHEETS_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(orderData),
-          mode: 'cors'
-        });
-        
-        console.log('📊 Response status:', response.status);
-        
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('📊 Response error:', errorText);
-          throw new Error(`HTTP ${response.status}: ${errorText}`);
+    // ✅ JSONP function để tránh CORS
+    function sendToGoogleSheets(orderData) {
+      return new Promise((resolve, reject) => {
+        try {
+          const callbackName = 'googleSheetsCallback_' + Date.now();
+          const script = document.createElement('script');
+          
+          window[callbackName] = function(response) {
+            // Cleanup
+            delete window[callbackName];
+            if (script.parentNode) {
+              document.head.removeChild(script);
+            }
+            
+            console.log('📊 Google Sheets response:', response);
+            
+            if (response && response.success) {
+              resolve(response);
+            } else {
+              reject(new Error(response ? response.message : 'Unknown error from Google Sheets'));
+            }
+          };
+          
+          script.onerror = function() {
+            delete window[callbackName];
+            if (script.parentNode) {
+              document.head.removeChild(script);
+            }
+            reject(new Error('JSONP request failed - network error'));
+          };
+          
+          // Tạo URL với callback và data
+          const params = new URLSearchParams({
+            callback: callbackName,
+            data: JSON.stringify(orderData)
+          });
+          
+          script.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
+          document.head.appendChild(script);
+          
+          // Timeout sau 15 giây
+          setTimeout(() => {
+            if (window[callbackName]) {
+              delete window[callbackName];
+              if (script.parentNode) {
+                document.head.removeChild(script);
+              }
+              reject(new Error('Request timeout - Google Sheets không phản hồi'));
+            }
+          }, 15000);
+          
+        } catch (error) {
+          reject(error);
         }
-        
-        const result = await response.json();
-        console.log('📊 Google Sheets result:', result);
-        return result;
-        
-      } catch (error) {
-        console.error('📊 Google Sheets error:', error);
-        throw error;
-      }
+      });
     }
 
     async function sendOrderByEmail(orderData){
@@ -476,23 +512,29 @@
 
         let sheetsSuccess = false;
         let emailSuccess = false;
+        let sheetsError = null;
+        let emailError = null;
 
         // Try Google Sheets first
         try {
+          console.log('📊 Attempting Google Sheets...');
           await sendToGoogleSheets(orderData);
           console.log('✅ Google Sheets success');
           sheetsSuccess = true;
-        } catch (sheetsError) {
-          console.error('❌ Google Sheets failed:', sheetsError);
+        } catch (error) {
+          console.error('❌ Google Sheets failed:', error);
+          sheetsError = error;
         }
 
         // Try email as backup
         try {
+          console.log('📧 Attempting email backup...');
           await sendOrderByEmail(orderData);
-          console.log('✅ Email success');
+          console.log('✅ Email backup success');
           emailSuccess = true;
-        } catch (emailError) {
-          console.error('❌ Email failed:', emailError);
+        } catch (error) {
+          console.error('❌ Email backup failed:', error);
+          emailError = error;
         }
 
         // Show success if at least one method worked
@@ -506,13 +548,25 @@
           
           showPopup();
           showToast('✅ Đặt hàng thành công!', 'success');
+          
+          if (sheetsSuccess) {
+            console.log('📊 Đơn hàng đã được lưu vào Google Sheets');
+          }
+          if (emailSuccess) {
+            console.log('📧 Đơn hàng đã được gửi qua email');
+          }
         } else {
-          throw new Error('Cả Google Sheets và Email đều thất bại');
+          let errorMsg = 'Không thể xử lý đơn hàng. ';
+          if (sheetsError) errorMsg += `Google Sheets: ${sheetsError.message}. `;
+          if (emailError) errorMsg += `Email: ${emailError.message}. `;
+          errorMsg += 'Vui lòng liên hệ trực tiếp qua Zalo/Messenger.';
+          
+          throw new Error(errorMsg);
         }
         
       } catch(err) {
         console.error('💥 Order processing error:', err);
-        showToast("Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ trực tiếp qua Zalo/Messenger.", 'error');
+        showToast(err.message || "Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ trực tiếp qua Zalo/Messenger.", 'error');
       } finally {
         // Re-enable button
         orderBtn.disabled = false;
@@ -544,4 +598,3 @@
   </script>
 </body>
 </html>
-
