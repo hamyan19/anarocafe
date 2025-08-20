@@ -526,39 +526,6 @@
             if(inputEl.value.trim()) {
               inputEl.classList.add('valid');
             } else {
-              inputEl.classList.remove('valid');
-            }
-          }
-        }
-      });
-
-      return isValid;
-    }
-
-    function getFormData(){
-      const name = document.getElementById('recipient').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const address = document.getElementById('address').value.trim();
-      const note = document.getElementById('note').value.trim();
-      const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Anh';
-      const payment = 'transfer'; // Always transfer now
-      
-      return { name, email, phone, address, note, gender, payment };
-    }
-
-    // Real-time validation for phone number
-    function setupRealTimeValidation() {
-      const phoneInput = document.getElementById('phone');
-      
-      phoneInput.addEventListener('input', function() {
-        const phone = this.value.trim();
-        const errorEl = document.getElementById('phoneError');
-        
-        if(!phone) {
-          this.classList.remove('valid', 'required');
-          errorEl.textContent = '';
-        } else {
           const phoneValidation = validatePhoneNumber(phone);
           if(!phoneValidation.valid) {
             this.classList.remove('valid');
@@ -842,3 +809,40 @@
       renderOrderSummary(readPayloadFromHash());
       setupRealTimeValidation();
     })();
+
+  </script>
+</body>
+</html> {
+              inputEl.classList.remove('valid');
+            }
+          }
+        }
+      });
+
+      return isValid;
+    }
+
+    function getFormData(){
+      const name = document.getElementById('recipient').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const note = document.getElementById('note').value.trim();
+      const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Anh';
+      const payment = 'transfer'; // Always transfer now
+      
+      return { name, email, phone, address, note, gender, payment };
+    }
+
+    // Real-time validation for phone number
+    function setupRealTimeValidation() {
+      const phoneInput = document.getElementById('phone');
+      
+      phoneInput.addEventListener('input', function() {
+        const phone = this.value.trim();
+        const errorEl = document.getElementById('phoneError');
+        
+        if(!phone) {
+          this.classList.remove('valid', 'required');
+          errorEl.textContent = '';
+        } else
