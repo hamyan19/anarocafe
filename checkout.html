@@ -47,6 +47,17 @@
     .modal .btn{background:#0001}
     .modal .cta{background:#F8EBDD}
 
+    /* Transfer info styling */
+    .transfer-info{margin-top:12px}
+    .bank-option{margin-bottom:12px;padding:12px;border:1px solid var(--border);border-radius:10px;background:#f9f9f9}
+    .bank-header{font-weight:700;margin-bottom:8px;color:var(--brand)}
+    .bank-details{font-size:14px}
+    .detail-row{display:flex;justify-content:space-between;align-items:center;margin:4px 0}
+    .copy-group{display:flex;align-items:center;gap:6px}
+    .copy-btn{background:#F8EBDD;border:1px solid var(--border);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:12px}
+    .copy-btn:hover{background:#e6d4c4}
+    .transfer-amount{margin-top:16px;padding:12px;background:#fff3cd;border:1px solid #ffeaa7;border-radius:10px}
+    .amount-info .detail-row{margin:6px 0}
   
     @media (max-width: 768px) {
       .grid{grid-template-columns:1fr}
@@ -54,7 +65,8 @@
       .gender{grid-template-columns:1fr 1fr}
       .srow{flex-direction:column}
       .modal{width:95vw}
-      .qr-grid{grid-template-columns:1fr}
+      .detail-row{flex-direction:column;align-items:flex-start;gap:4px}
+      .copy-group{width:100%}
     }
   </style>
 </head>
@@ -293,28 +305,52 @@
     }
 
     function showQRModal(){
-      document.getElementById('qrBackdrop').style.display = 'flex';
-      document.getElementById('qrDisplay').style.display = 'none';
-    }
-
-    function hideQRModal(){
-      document.getElementById('qrBackdrop').style.display = 'none';
-      document.getElementById('qrDisplay').style.display = 'none';
-    }
-
-    function showQR(type) {
       const payload = readPayloadFromHash();
       const total = payload ? payload.total : 0;
       const orderCode = 'ANARO' + Date.now().toString().slice(-6);
       
-      document.getElementById('qrAmount').textContent = fmt(total);
-      document.getElementById('qrContent').textContent = orderCode;
+      // Update transfer amount and content
+      document.getElementById('transferAmount').textContent = fmt(total);
+      document.getElementById('transferContent').textContent = orderCode;
       
-      // Hiển thị QR code placeholder - trong thực tế sẽ generate QR thực
-      const qrCode = document.getElementById('qrCode');
-      qrCode.textContent = `QR ${type.toUpperCase()}\nSố tiền: ${fmt(total)}\nNội dung: ${orderCode}`;
-      
-      document.getElementById('qrDisplay').style.display = 'block';
+      document.getElementById('qrBackdrop').style.display = 'flex';
+    }
+
+    function hideQRModal(){
+      document.getElementById('qrBackdrop').style.display = 'none';
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('✅ Đã copy: ' + text, 'success');
+        }).catch(() => {
+          fallbackCopy(text);
+        });
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast('✅ Đã copy: ' + text, 'success');
+      } catch (err) {
+        showToast('❌ Không thể copy. Vui lòng copy thủ công.', 'error');
+      }
+      document.body.removeChild(textArea);
+    }
+
+    function copyTransferContent() {
+      const content = document.getElementById('transferContent').textContent;
+      copyToClipboard(content);
     }
 
     function confirmTransfer(){
@@ -346,7 +382,16 @@
         if(!m) return null;
         const json = decodeURIComponent(escape(atob(m[1])));
         return JSON.parse(json);
-      }catch(e){ return null; }
+      }catch(e){ 
+        console.log('No payload found in hash, using default values');
+        return {
+          items: [{name: 'Arabica Đà Lạt', size: '250g', grind: 'Nguyên hạt', qty: 2}],
+          subtotal: 180000,
+          weightKg: 0.5,
+          shipping: 29000,
+          total: 209000
+        };
+      }
     }
 
     function bindSocialLinks(){
@@ -442,7 +487,7 @@
       return { name, email, phone, address, note, gender, payment };
     }
 
-    // ✅ JSONP function để tránh CORS
+    // Fixed JSONP function để tránh CORS
     function sendToGoogleSheets(orderData) {
       return new Promise((resolve, reject) => {
         try {
@@ -458,10 +503,10 @@
             
             console.log('📊 Google Sheets response:', response);
             
-            if (response && response.success) {
+            if (response && (response.success || response.result === 'success')) {
               resolve(response);
             } else {
-              reject(new Error(response ? response.message : 'Unknown error from Google Sheets'));
+              reject(new Error(response ? (response.message || response.error || 'Unknown error') : 'Unknown error from Google Sheets'));
             }
           };
           
@@ -500,32 +545,56 @@
     }
 
     async function sendOrderByEmail(orderData){
-      const r = orderData.recipient || {};
-      const itemsStr = (orderData.items||[]).map(i=>`${i.name} — ${i.size} — ${i.grind} × ${i.qty}`).join("; ");
-      const body = {
-        _subject: "Đơn hàng mới từ ANARO COFFEE",
-        _template: "table",
-        "Người nhận": `${r.gender||""} ${r.name||""}`.trim(),
-        "Email": r.email||"",
-        "SĐT": r.phone||"",
-        "Địa chỉ": r.address||"",
-        "Ghi chú": r.note||"",
-        "Phương thức TT": r.payment === 'cod' ? 'COD' : 'Chuyển khoản',
-        "Tiền hàng": fmt(orderData.subtotal||0),
-        "Phí ship": fmt(orderData.shipping||0),
-        "Tổng": fmt(orderData.total||0),
-        "Cân nặng (kg)": (orderData.weightKg||0),
-        "Chi tiết": itemsStr,
-        "Thời gian": new Date().toLocaleString('vi-VN')
-      };
+      try {
+        const r = orderData.recipient || {};
+        const itemsStr = (orderData.items||[]).map(i=>`${i.name} — ${i.size} — ${i.grind} × ${i.qty}`).join("; ");
+        
+        const body = {
+          _subject: "Đơn hàng mới từ ANARO COFFEE",
+          _template: "table",
+          _captcha: false,
+          _next: window.location.href,
+          "Người nhận": `${r.gender||""} ${r.name||""}`.trim(),
+          "Email": r.email||"N/A",
+          "SĐT": r.phone||"",
+          "Địa chỉ": r.address||"",
+          "Ghi chú": r.note||"N/A",
+          "Phương thức TT": r.payment === 'cod' ? 'COD' : 'Chuyển khoản',
+          "Tiền hàng": fmt(orderData.subtotal||0),
+          "Phí ship": fmt(orderData.shipping||0),
+          "Tổng": fmt(orderData.total||0),
+          "Cân nặng (kg)": (orderData.weightKg||0),
+          "Chi tiết": itemsStr,
+          "Mã đơn": orderData.orderCode || 'N/A',
+          "Thời gian": new Date().toLocaleString('vi-VN')
+        };
 
-      const res = await fetch(FORM_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify(body)
-      });
-      if(!res.ok){ throw new Error(await res.text()); }
-      return res.json().catch(()=>({}));
+        console.log('📧 Sending email with data:', body);
+
+        const res = await fetch(FORM_ENDPOINT, {
+          method: "POST",
+          headers: { 
+            "Content-Type": "application/json", 
+            "Accept": "application/json" 
+          },
+          body: JSON.stringify(body)
+        });
+
+        console.log('📧 Email response status:', res.status);
+        
+        if(!res.ok) { 
+          const errorText = await res.text();
+          console.error('📧 Email error response:', errorText);
+          throw new Error(`HTTP ${res.status}: ${errorText}`);
+        }
+        
+        const result = await res.json().catch(()=>({}));
+        console.log('📧 Email success response:', result);
+        return result;
+      } catch (error) {
+        console.error('📧 Email sending failed:', error);
+        throw error;
+      }
     }
 
     async function processOrder() {
@@ -558,8 +627,8 @@
         // Try Google Sheets first
         try {
           console.log('📊 Attempting Google Sheets...');
-          await sendToGoogleSheets(orderData);
-          console.log('✅ Google Sheets success');
+          const sheetsResult = await sendToGoogleSheets(orderData);
+          console.log('✅ Google Sheets success:', sheetsResult);
           sheetsSuccess = true;
         } catch (error) {
           console.error('❌ Google Sheets failed:', error);
@@ -569,8 +638,8 @@
         // Try email as backup
         try {
           console.log('📧 Attempting email backup...');
-          await sendOrderByEmail(orderData);
-          console.log('✅ Email backup success');
+          const emailResult = await sendOrderByEmail(orderData);
+          console.log('✅ Email backup success:', emailResult);
           emailSuccess = true;
         } catch (error) {
           console.error('❌ Email backup failed:', error);
@@ -586,6 +655,12 @@
           document.getElementById('address').value = '';
           document.getElementById('note').value = '';
           
+          // Reset payment method to COD
+          document.querySelector('input[name="payment"][value="cod"]').checked = true;
+          document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+          document.querySelector('.payment-option').classList.add('selected');
+          
+          // Show success popup
           showPopup();
           showToast('✅ Đặt hàng thành công!', 'success');
           
@@ -638,5 +713,3 @@
   </script>
 </body>
 </html>
-
-
