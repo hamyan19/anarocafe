@@ -1,229 +1,724 @@
-<html lang="vi"><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/content/location/location.js" id="eppiocemhmnlbhjplcgkofciiegomcon"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/extend-native-history-api.js"></script><script src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/libs/requests.js"></script><head>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ANARO — Bảng Giá Sỉ Cà Phê</title>
   <meta name="description" content="Bảng giá sỉ Arabica, Robusta và các blend cho quán. Đăng ký tư vấn và nhận mẫu miễn phí. Giao nhanh TP.HCM.">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(135deg,#8B4513 0%,#D2691E 50%,#F4A460 100%);margin:0;padding:20px;min-height:100vh}
-    .container{max-width:1200px;margin:0 auto;background:rgba(245,245,220,.95);border-radius:20px;padding:30px;box-shadow:0 20px 60px rgba(139,69,19,.3);border:2px solid rgba(139,69,19,.2)}
-    .header{text-align:center;margin-bottom:30px}
-    .header h1{margin:0;background:linear-gradient(45deg,#8B4513,#D2691E);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .update-date{text-align:center;color:#666;font-size:14px;margin-bottom:30px;font-style:italic}
-    .section{margin-bottom:40px;background:rgba(255,248,220,.9);border-radius:15px;padding:25px;border:2px solid rgba(210,105,30,.3)}
-    .section-title{color:#8B4513;font-size:20px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-    table{width:100%;border-collapse:collapse;margin-bottom:16px;background:rgba(255,250,240,.95);border-radius:10px;overflow:hidden;border:1px solid rgba(210,105,30,.3)}
-    th,td{padding:12px;text-align:left;border-bottom:1px solid #eee}
-    th{background:linear-gradient(135deg,#8B4513,#A0522D);color:#fff;font-weight:600;text-transform:uppercase}
-    tr:nth-child(even){background-color:rgba(245,245,220,.5)}
-    tr:hover{background-color:rgba(210,105,30,.1);transition:.3s}
-    .price{font-weight:700;color:#D2691E}
-    .blend-ratio{background:linear-gradient(45deg,#f72585,#b5179e);color:#fff;padding:4px 10px;border-radius:20px;font-size:12px;white-space:nowrap}
-    .note{background:#fff3cd;border:1px solid #ffeaa7;border-radius:10px;padding:15px;margin-top:16px;color:#856404;font-style:italic}
-    /* Sticky CTA */
-    .sticky-cta{position:sticky;bottom:12px;z-index:10;margin-top:16px}
-    .sticky-cta .bar{max-width:1200px;margin:0 auto;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    .btn{display:inline-block;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:600;color:#fff}
-    .btn-primary{background:#8B4513}
-    .btn-green{background:#25D366}
-    .btn-blue{background:#1f7aec}
-    /* Form */
-    #leadForm{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    #leadForm input,#leadForm select,#leadForm textarea{padding:12px;border:1px solid #ddd;border-radius:8px}
-    #leadForm textarea{grid-column:1/-1}
-    #formMsg{grid-column:1/-1;color:#228B22;font-weight:600;display:none}
-    /* Filter helpers */
-    .blend-row{display:table-row}
-    .ratio-2-8{}
-    .ratio-3-7{}
-    .ratio-5-5{}
-    .a-dalat{}
-    .a-caudat{}
-    .r-moc{}
-    .r-honey{}
-    @media (max-width:768px){.container{padding:20px;margin:10px}th,td{padding:10px 8px}table{font-size:14px}#leadForm{grid-template-columns:1fr}}
+    :root {
+      --primary: #6b3f25;
+      --secondary: #a47148;
+      --bg: #f6efe9;
+      --text: #2a221d;
+      --light: #F8EBDD;
+      --border: #e9d7c5;
+      --white: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --radius: 16px;
+      --focus-ring: 0 0 0 3px rgba(107, 63, 37, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(180deg, #fff, var(--bg) 50%, #f0e2d6);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* Focus styles for accessibility */
+    *:focus {
+      outline: none;
+      box-shadow: var(--focus-ring);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Sticky contact buttons */
+    .sticky-contact {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 50px;
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      min-width: 120px;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .contact-btn.zalo {
+      background: linear-gradient(135deg, #0068FF, #0084FF);
+    }
+
+    .contact-btn.phone {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+    }
+
+    /* Header styles */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      background: #fdf8f3;
+      backdrop-filter: saturate(180%) blur(8px);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 15px 16px;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      color: var(--primary);
+    }
+
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--primary);
+      background: transparent;
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover,
+    .btn:focus {
+      background: var(--primary);
+      color: var(--white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--light);
+      border-color: transparent;
+    }
+
+    .btn-home {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      border: none;
+    }
+
+    /* Main content */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .page-title h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .update-date {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+      font-style: italic;
+    }
+
+    /* Section styles matching index page */
+    .section {
+      margin: 30px 0 40px;
+    }
+
+    .section-title {
+      color: var(--light);
+      background: var(--secondary);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      text-align: center;
+      padding: 16px 24px;
+      border-radius: var(--radius);
+      text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+      margin-bottom: 24px;
+    }
+
+    /* Table styles */
+    .table-container {
+      background: radial-gradient(120% 140% at 10% 0%, #fff 0%, #fff6ee 60%, #ffeede 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 16px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+
+    th {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(248, 235, 221, 0.3);
+    }
+
+    tr:hover {
+      background-color: rgba(164, 113, 72, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .price {
+      font-weight: 700;
+      color: var(--secondary);
+      font-size: 16px;
+    }
+
+    .blend-ratio {
+      background: linear-gradient(45deg, #f72585, #b5179e);
+      color: var(--white);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      display: inline-block;
+    }
+
+    /* Form styles */
+    .form-container {
+      background: radial-gradient(120% 140% at 10% 0%, #fff 0%, #fff6ee 60%, #ffeede 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    #leadForm {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    #leadForm input,
+    #leadForm select,
+    #leadForm textarea {
+      padding: 14px 16px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 16px;
+      background: var(--white);
+      color: var(--text);
+      transition: all 0.2s ease;
+    }
+
+    #leadForm input:focus,
+    #leadForm select:focus,
+    #leadForm textarea:focus {
+      border-color: var(--primary);
+      box-shadow: var(--focus-ring);
+    }
+
+    #leadForm textarea {
+      grid-column: 1 / -1;
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .checkbox-container {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    .checkbox-container input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+    }
+
+    .submit-btn {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      border: none;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(107, 63, 37, 0.3);
+    }
+
+    #formMsg {
+      grid-column: 1 / -1;
+      color: #228B22;
+      font-weight: 600;
+      text-align: center;
+      padding: 16px;
+      background: rgba(34, 139, 34, 0.1);
+      border-radius: 8px;
+      display: none;
+    }
+
+    /* Note styles */
+    .note {
+      background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+      border: 2px solid #ffd93d;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      color: #856404;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .note strong {
+      color: #6f5200;
+    }
+
+    /* Policy cards */
+    .policy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    .policy-card {
+      padding: 20px;
+      border-radius: 12px;
+      border-left: 4px solid;
+    }
+
+    .policy-card.shipping {
+      background: rgba(144, 238, 144, 0.2);
+      border-left-color: #32CD32;
+    }
+
+    .policy-card.pricing {
+      background: rgba(255, 215, 0, 0.2);
+      border-left-color: #FFD700;
+    }
+
+    .policy-card h4 {
+      margin: 0 0 12px 0;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .policy-card.shipping h4 {
+      color: #228B22;
+    }
+
+    .policy-card.pricing h4 {
+      color: #B8860B;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .sticky-contact {
+        top: 10px;
+        right: 10px;
+      }
+
+      .contact-btn {
+        padding: 10px 12px;
+        font-size: 12px;
+        min-width: 100px;
+      }
+
+      .nav {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+
+      .main-container {
+        padding: 0 16px 40px;
+      }
+
+      .page-title h1 {
+        font-size: 2rem;
+      }
+
+      #leadForm {
+        grid-template-columns: 1fr;
+      }
+
+      .policy-grid {
+        grid-template-columns: 1fr;
+      }
+
+      th, td {
+        padding: 12px 8px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-title h1 {
+        font-size: 1.8rem;
+      }
+
+      .section-title {
+        font-size: 18px;
+        padding: 12px 16px;
+      }
+
+      th, td {
+        padding: 10px 6px;
+        font-size: 13px;
+      }
+    }
   </style>
-<script bis_use="true" type="text/javascript" charset="utf-8" data-bis-config="[&quot;facebook.com/&quot;,&quot;twitter.com/&quot;,&quot;youtube-nocookie.com/embed/&quot;,&quot;//vk.com/&quot;,&quot;//www.vk.com/&quot;,&quot;linkedin.com/&quot;,&quot;//www.linkedin.com/&quot;,&quot;//instagram.com/&quot;,&quot;//www.instagram.com/&quot;,&quot;//www.google.com/recaptcha/api2/&quot;,&quot;//hangouts.google.com/webchat/&quot;,&quot;//www.google.com/calendar/&quot;,&quot;//www.google.com/maps/embed&quot;,&quot;spotify.com/&quot;,&quot;soundcloud.com/&quot;,&quot;//player.vimeo.com/&quot;,&quot;//disqus.com/&quot;,&quot;//tgwidget.com/&quot;,&quot;//js.driftt.com/&quot;,&quot;friends2follow.com&quot;,&quot;/widget&quot;,&quot;login&quot;,&quot;//video.bigmir.net/&quot;,&quot;blogger.com&quot;,&quot;//smartlock.google.com/&quot;,&quot;//keep.google.com/&quot;,&quot;/web.tolstoycomments.com/&quot;,&quot;moz-extension://&quot;,&quot;chrome-extension://&quot;,&quot;/auth/&quot;,&quot;//analytics.google.com/&quot;,&quot;adclarity.com&quot;,&quot;paddle.com/checkout&quot;,&quot;hcaptcha.com&quot;,&quot;recaptcha.net&quot;,&quot;2captcha.com&quot;,&quot;accounts.google.com&quot;,&quot;www.google.com/shopping/customerreviews&quot;,&quot;buy.tinypass.com&quot;,&quot;gstatic.com&quot;,&quot;secureir.ebaystatic.com&quot;,&quot;docs.google.com&quot;,&quot;contacts.google.com&quot;,&quot;github.com&quot;,&quot;mail.google.com&quot;,&quot;chat.google.com&quot;,&quot;audio.xpleer.com&quot;,&quot;keepa.com&quot;,&quot;static.xx.fbcdn.net&quot;,&quot;sas.selleramp.com&quot;,&quot;1plus1.video&quot;,&quot;console.googletagservices.com&quot;,&quot;//lnkd.demdex.net/&quot;,&quot;//radar.cedexis.com/&quot;,&quot;//li.protechts.net/&quot;,&quot;challenges.cloudflare.com/&quot;,&quot;ogs.google.com&quot;]" src="chrome-extension://eppiocemhmnlbhjplcgkofciiegomcon/executors/traffic.js"></script><style type="text/css">.index-module_type__E-SaG::after {
-  content: '|';
-  animation: index-module_cursor__PQg0P 1.1s infinite step-start;
-}
+</head>
 
-@keyframes index-module_cursor__PQg0P {
-  50% {
-    opacity: 0;
-  }
-}
-</style><style id="__web-inspector-hide-shortcut-style__">
-.__web-inspector-hide-shortcut__, .__web-inspector-hide-shortcut__ *
-{
-    visibility: hidden !important;
-}
-</style></head>
-<body bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6ImVwcGlvY2VtaG1ubGJoanBsY2drb2ZjaWllZ29tY29uIiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQiLCJSRURESVQiOiJkaXNhYmxlZCIsIlBJTlRFUkVTVCI6ImRpc2FibGVkIiwiSU5TVEFHUkFNIjoiZGlzYWJsZWQiLCJUSUtUT0siOiJkaXNhYmxlZCIsIkxJTktFRElOIjoiZGlzYWJsZWQiLCJDT05GSUciOiJkaXNhYmxlZCJ9LCJ2ZXJzaW9uIjoiMi4wLjI2Iiwic2NvcmUiOjIwMDI2fV0=" __processed_e2e494ef-1636-4706-82d1-c68b464dd521__="true">
-  <!-- Sticky CTA -->
-  <div class="sticky-cta" bis_skin_checked="1">
-<div class="bar" bis_skin_checked="1">
-<a class="btn btn-primary" href="#wholesale-form">Đăng ký tư vấn &amp; nhận mẫu miễn phí</a>
-<a class="btn btn-green" href="https://zalo.me/your-number">Chat Zalo</a>
-<a class="btn btn-blue" href="tel:+84901234567">Gọi ngay</a>
-</div>
-</div>
+<body>
+  <!-- Sticky Contact Buttons -->
+  <div class="sticky-contact">
+    <a href="https://zalo.me/0918337071" class="contact-btn zalo" target="_blank" rel="noopener">
+      <i class="fab fa-zalo"></i>
+      <span>Zalo</span>
+    </a>
+    <a href="tel:+84918337071" class="contact-btn phone">
+      <i class="fas fa-phone"></i>
+      <span>Gọi ngay</span>
+    </a>
+  </div>
 
-  <div class="container" bis_skin_checked="1">
-    <div class="header" bis_skin_checked="1"><h1>☕ BẢNG GIÁ SỈ CÀ PHÊ HẠT</h1></div>
-    <div class="update-date" bis_skin_checked="1">📅 Cập nhật ngày 20/8/2025</div>
+  <!-- Header -->
+  <header class="header" role="banner">
+    <div class="header-container">
+      <div class="header-top">
+        <h1>☕ ANARO COFFEE WHOLESALE</h1>
+      </div>
+      <nav class="nav" role="navigation">
+        <a class="btn btn-home" href="https://anarocafe.vercel.app">🏠 Về trang chủ</a>
+        <a class="btn" href="#wholesale-form">📝 Đăng ký tư vấn</a>
+        <a class="btn btn-primary" href="https://anarocafe.vercel.app/index-cart.html">🛒 Mua lẻ</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <div class="page-title">
+      <h1>BẢNG GIÁ SỈ CÀ PHÊ HẠT</h1>
+    </div>
+    <div class="update-date">📅 Cập nhật ngày 25/4/2025</div>
 
     <!-- Single Origin -->
-    <div class="section" id="single-origin" bis_skin_checked="1">
-      <div class="section-title" bis_skin_checked="1">☕ CÀ PHÊ HẠT MỘC - PHA MÁY (Single Origin)</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Loại Cà Phê</th>
-            <th>Giá Mộc (VND)</th>
-            <th>Giá Tẩm Bơ (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Arabica Cầu Đất</td><td class="price">330.000</td><td class="price">340.000</td></tr>
-          <tr><td>Arabica Đà Lạt</td><td class="price">310.000</td><td class="price">320.000</td></tr>
-          <tr><td>Robusta Honey</td><td class="price">285.000</td><td class="price">295.000</td></tr>
-          <tr><td>Robusta Mộc</td><td class="price">235.000</td><td class="price">245.000</td></tr>
-          <tr><td>Culi</td><td class="price">235.000</td><td class="price">245.000</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <section class="section" id="single-origin">
+      <h2 class="section-title">☕ CÀ PHÊ HẠT MỘC - PHA MÁY (Single Origin)</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Loại Cà Phê</th>
+              <th>Giá Mộc (VND/kg)</th>
+              <th>Giá Tẩm Bơ (VND/kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Arabica Cầu Đất</td><td class="price">330.000</td><td class="price">340.000</td></tr>
+            <tr><td>Arabica Đà Lạt</td><td class="price">310.000</td><td class="price">320.000</td></tr>
+            <tr><td>Robusta Honey</td><td class="price">285.000</td><td class="price">295.000</td></tr>
+            <tr><td>Robusta Mộc</td><td class="price">235.000</td><td class="price">245.000</td></tr>
+            <tr><td>Culi</td><td class="price">235.000</td><td class="price">245.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- Blend A Đà Lạt + Robusta -->
-    <div class="section" id="blend-a-dalat" bis_skin_checked="1">
-      <div class="section-title" bis_skin_checked="1">🌟 BLEND ARABICA ĐÀ LẠT — ROBUSTA</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Tỉ Lệ A:R</th>
-            <th>Loại</th>
-            <th>Giá Mộc (VND)</th>
-            <th>Giá Tẩm Bơ (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="blend-row ratio-2-8 a-dalat r-moc"><td><span class="blend-ratio">2:8</span></td><td>Arabica Đà Lạt - Robusta Mộc</td><td class="price">250.000</td><td class="price">260.000</td></tr>
-          <tr class="blend-row ratio-2-8 a-dalat r-honey"><td><span class="blend-ratio">2:8</span></td><td>Arabica Đà Lạt - Robusta Honey</td><td class="price">295.000</td><td class="price">305.000</td></tr>
-          <tr class="blend-row ratio-3-7 a-dalat r-moc"><td><span class="blend-ratio">3:7</span></td><td>Arabica Đà Lạt - Robusta Mộc</td><td class="price">257.500</td><td class="price">267.500</td></tr>
-          <tr class="blend-row ratio-3-7 a-dalat r-honey"><td><span class="blend-ratio">3:7</span></td><td>Arabica Đà Lạt - Robusta Honey</td><td class="price">302.500</td><td class="price">312.500</td></tr>
-          <tr class="blend-row ratio-5-5 a-dalat r-moc"><td><span class="blend-ratio">5:5</span></td><td>Arabica Đà Lạt - Robusta Mộc</td><td class="price">272.500</td><td class="price">282.500</td></tr>
-          <tr class="blend-row ratio-5-5 a-dalat r-honey"><td><span class="blend-ratio">5:5</span></td><td>Arabica Đà Lạt - Robusta Honey</td><td class="price">297.500</td><td class="price">307.500</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <section class="section" id="blend-a-dalat">
+      <h2 class="section-title">🌟 BLEND ARABICA ĐÀ LẠT — ROBUSTA</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tỉ Lệ A:R</th>
+              <th>Loại</th>
+              <th>Giá Mộc (VND/kg)</th>
+              <th>Giá Tẩm Bơ (VND/kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="blend-ratio">2:8</span></td><td>Arabica Đà Lạt - Robusta Mộc</td><td class="price">250.000</td><td class="price">260.000</td></tr>
+            <tr><td><span class="blend-ratio">2:8</span></td><td>Arabica Đà Lạt - Robusta Honey</td><td class="price">295.000</td><td class="price">305.000</td></tr>
+            <tr><td><span class="blend-ratio">3:7</span></td><td>Arabica Đà Lạt - Robusta Mộc</td><td class="price">257.500</td><td class="price">267.500</td></tr>
+            <tr><td><span class="blend-ratio">3:7</span></td><td>Arabica Đà Lạt - Robusta Honey</td><td class="price">302.500</td><td class="price">312.500</td></tr>
+            <tr><td><span class="blend-ratio">5:5</span></td><td>Arabica Đà Lạt - Robusta Mộc</td><td class="price">272.500</td><td class="price">282.500</td></tr>
+            <tr><td><span class="blend-ratio">5:5</span></td><td>Arabica Đà Lạt - Robusta Honey</td><td class="price">297.500</td><td class="price">307.500</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <!-- Blend A Cầu Đất + Robusta -->
-    <div class="section" id="blend-a-caudat" bis_skin_checked="1">
-      <div class="section-title" bis_skin_checked="1">🌟 BLEND ARABICA CẦU ĐẤT — ROBUSTA</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Tỉ Lệ A:R</th>
-            <th>Loại</th>
-            <th>Giá Mộc (VND)</th>
-            <th>Giá Tẩm Bơ (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="blend-row ratio-2-8 a-caudat r-moc"><td><span class="blend-ratio">2:8</span></td><td>Arabica Cầu Đất - Robusta Mộc</td><td class="price">254.000</td><td class="price">264.000</td></tr>
-          <tr class="blend-row ratio-2-8 a-caudat r-honey"><td><span class="blend-ratio">2:8</span></td><td>Arabica Cầu Đất - Robusta Honey</td><td class="price">304.000</td><td class="price">314.000</td></tr>
-          <tr class="blend-row ratio-3-7 a-caudat r-moc"><td><span class="blend-ratio">3:7</span></td><td>Arabica Cầu Đất - Robusta Mộc</td><td class="price">263.500</td><td class="price">273.500</td></tr>
-          <tr class="blend-row ratio-3-7 a-caudat r-honey"><td><span class="blend-ratio">3:7</span></td><td>Arabica Cầu Đất - Robusta Honey</td><td class="price">314.500</td><td class="price">324.500</td></tr>
-          <tr class="blend-row ratio-5-5 a-caudat r-moc"><td><span class="blend-ratio">5:5</span></td><td>Arabica Cầu Đất - Robusta Mộc</td><td class="price">282.500</td><td class="price">292.500</td></tr>
-          <tr class="blend-row ratio-5-5 a-caudat r-honey"><td><span class="blend-ratio">5:5</span></td><td>Arabica Cầu Đất - Robusta Honey</td><td class="price">307.500</td><td class="price">317.500</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <section class="section" id="blend-a-caudat">
+      <h2 class="section-title">🌟 BLEND ARABICA CẦU ĐẤT — ROBUSTA</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tỉ Lệ A:R</th>
+              <th>Loại</th>
+              <th>Giá Mộc (VND/kg)</th>
+              <th>Giá Tẩm Bơ (VND/kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="blend-ratio">2:8</span></td><td>Arabica Cầu Đất - Robusta Mộc</td><td class="price">254.000</td><td class="price">264.000</td></tr>
+            <tr><td><span class="blend-ratio">2:8</span></td><td>Arabica Cầu Đất - Robusta Honey</td><td class="price">304.000</td><td class="price">314.000</td></tr>
+            <tr><td><span class="blend-ratio">3:7</span></td><td>Arabica Cầu Đất - Robusta Mộc</td><td class="price">263.500</td><td class="price">273.500</td></tr>
+            <tr><td><span class="blend-ratio">3:7</span></td><td>Arabica Cầu Đất - Robusta Honey</td><td class="price">314.500</td><td class="price">324.500</td></tr>
+            <tr><td><span class="blend-ratio">5:5</span></td><td>Arabica Cầu Đất - Robusta Mộc</td><td class="price">282.500</td><td class="price">292.500</td></tr>
+            <tr><td><span class="blend-ratio">5:5</span></td><td>Arabica Cầu Đất - Robusta Honey</td><td class="price">307.500</td><td class="price">317.500</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-    <!-- Blend đặc biệt 4:4:2 (giữ tỷ lệ, bỏ mô tả Culi/Robusta/Arabica, bỏ cột Đậm) -->
-    <div class="section" id="blend-442" bis_skin_checked="1">
-      <div class="section-title" bis_skin_checked="1">⭐ BLEND 4:4:2</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Tỉ Lệ</th>
-            <th>Giá Mộc (VND)</th>
-            <th>Giá Tẩm Bơ (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="blend-row ratio-4-4-2"><td><span class="blend-ratio">4:4:2</span></td><td class="price">250.000</td><td class="price">260.000</td></tr>
-          <tr class="blend-row ratio-4-4-2"><td><span class="blend-ratio">4:4:2</span></td><td class="price">254.000</td><td class="price">264.000</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Blend đặc biệt 4:4:2 -->
+    <section class="section" id="blend-442">
+      <h2 class="section-title">⭐ BLEND 4:4:2</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tỉ Lệ</th>
+              <th>Giá Mộc (VND/kg)</th>
+              <th>Giá Tẩm Bơ (VND/kg)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="blend-ratio">4:4:2</span></td><td class="price">250.000</td><td class="price">260.000</td></tr>
+            <tr><td><span class="blend-ratio">4:4:2</span></td><td class="price">254.000</td><td class="price">264.000</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-    <!-- Form sỉ (đổi copy theo yêu cầu) -->
-    
+    <!-- Form đăng ký -->
+    <section class="section" id="wholesale-form">
+      <h2 class="section-title">📨 ĐĂNG KÝ TƯ VẤN & NHẬN MẪU MIỄN PHÍ</h2>
+      <div class="form-container">
+        <form id="leadForm">
+          <input name="company" placeholder="Tên quán/công ty *" required>
+          <input name="contact" placeholder="Người liên hệ *" required>
+          <input name="phone" placeholder="Số điện thoại *" required>
+          <input name="email" type="email" placeholder="Email">
+          <select name="volume" required>
+            <option value="">Sản lượng/tháng *</option>
+            <option>< 30kg</option>
+            <option>30–100kg</option>
+            <option>100–300kg</option>
+            <option>> 300kg</option>
+          </select>
+          <select name="line" required>
+            <option value="">Dòng quan tâm *</option>
+            <option>Arabica Cầu Đất</option>
+            <option>Arabica Đà Lạt</option>
+            <option>Robusta Honey</option>
+            <option>Robusta Mộc</option>
+            <option>Blend 4:4:2</option>
+            <option>Blend A:R (2:8 / 3:7 / 5:5)</option>
+          </select>
+          <textarea name="note" placeholder="Ghi chú (hương vị, tỷ lệ, thời gian giao…)"></textarea>
+          <div class="checkbox-container">
+            <input type="checkbox" name="vat" id="vat">
+            <label for="vat">Xuất hoá đơn VAT</label>
+          </div>
+          <button type="submit" class="submit-btn">Gửi yêu cầu</button>
+          <div id="formMsg">✅ Đã gửi thành công! Chúng tôi sẽ liên hệ trong ngày.</div>
+        </form>
+      </div>
+      <div class="note">
+        🔒 <strong>Bảo mật thông tin:</strong> Dữ liệu được bảo mật tuyệt đối. Chỉ sử dụng cho mục đích tư vấn và gửi mẫu thử sản phẩm.
+      </div>
+    </section>
 
-    <!-- Card giá sỉ theo số lượng: ĐƯA XUỐNG CUỐI, TRÊN CHÍNH SÁCH GIAO HÀNG -->
-    <div class="section" id="tier-pricing" bis_skin_checked="1">
-      <div class="section-title" bis_skin_checked="1">🏷️ GIÁ SỈ THEO SỐ LƯỢNG</div>
-      <table>
-        <thead><tr><th>Ngưỡng</th><th>Chiết khấu</th><th>Điều kiện</th></tr></thead>
-        <tbody>
-          <tr><td class="price">≥ 30kg/tháng</td><td class="price">-5.000 VND/kg</td><td>Áp dụng toàn bộ danh mục</td></tr>
-          <tr><td class="price">≥ 100kg/tháng</td><td class="price">-10.000 VND/kg</td><td>Áp dụng toàn bộ danh mục</td></tr>
-        </tbody>
-      </table>
-      <div class="note" bis_skin_checked="1">MOQ mặc định: 5kg/đơn; Giá chưa gồm VAT; Thời gian giao HCM: 24–48h.</div>
-    </div>
+    <!-- Giá sỉ theo số lượng -->
+    <section class="section" id="tier-pricing">
+      <h2 class="section-title">🏷️ GIÁ SỈ THEO SỐ LƯỢNG</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Ngưỡng</th>
+              <th>Chiết khấu</th>
+              <th>Điều kiện</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="price">≥ 30kg/tháng</td><td class="price">-5.000 VND/kg</td><td>Áp dụng toàn bộ danh mục</td></tr>
+            <tr><td class="price">≥ 100kg/tháng</td><td class="price">-10.000 VND/kg</td><td class="price">Áp dụng toàn bộ danh mục</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note">
+        📦 <strong>Điều kiện:</strong> MOQ mặc định: 5kg/đơn; Giá chưa bao gồm VAT; Thời gian giao hàng TP.HCM: 24–48h.
+      </div>
+    </section>
 
     <!-- Chính sách giao hàng & thanh toán -->
-    <div class="section" id="shipping-policy" bis_skin_checked="1">
-      <div class="section-title" bis_skin_checked="1">🚚 CHÍNH SÁCH GIAO HÀNG &amp; THANH TOÁN</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:10px" bis_skin_checked="1">
-        <div style="background:rgba(144,238,144,.2);padding:15px;border-radius:10px;border-left:4px solid #32CD32" bis_skin_checked="1">
-          <h4 style="color:#228B22;margin:0 0 8px 0">📦 MIỄN PHÍ SHIP TP.HCM</h4>
+    <section class="section" id="shipping-policy">
+      <h2 class="section-title">🚚 CHÍNH SÁCH GIAO HÀNG & THANH TOÁN</h2>
+      <div class="policy-grid">
+        <div class="policy-card shipping">
+          <h4>📦 MIỄN PHÍ SHIP TP.HCM</h4>
           • Nội thành: Từ 5kg<br>
           • Ngoại thành: Từ 10kg<br>
           • Giao hàng trong ngày
         </div>
-        <div style="background:rgba(255,215,0,.2);padding:15px;border-radius:10px;border-left:4px solid #FFD700" bis_skin_checked="1">
-          <h4 style="color:#B8860B;margin:0 0 8px 0">💰 GIÁ SỈ</h4>
+        <div class="policy-card pricing">
+          <h4>💰 CHÍNH SÁCH GIÁ</h4>
           • Chưa bao gồm VAT<br>
-          • Chưa bao gồm phí vận chuyển
+          • Chưa bao gồm phí vận chuyển<br>
+          • Giá có thể thay đổi theo thị trường
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- Ghi chú chung -->
-    <!-- Ghi chú chung --><div class="note" bis_skin_checked="1">
-      <strong>📝 Ghi chú:</strong><br>
+    <div class="note">
+      <strong>📝 Ghi chú quan trọng:</strong><br>
       • Giá tính theo tỉ lệ trọng lượng từng loại hạt<br>
       • A:R = Arabica:Robusta<br>
       • Tất cả sản phẩm đều phù hợp pha máy espresso<br>
       • Cà phê tẩm bơ chỉ dùng cho pha phin<br>
-      • Giá có thể thay đổi theo thị trường
+      • Liên hệ để được tư vấn blend phù hợp với định hướng quán
     </div>
-  </div>
+  </main>
 
   <script>
-    // Apps Script endpoint: thay bằng URL thật sau khi deploy
+    // Apps Script endpoint
     const GS_ENDPOINT = 'https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_ID/exec';
     const phoneVN = /^(0|\+84)(3|5|7|8|9)\d{8}$/;
+    
     const form = document.getElementById('leadForm');
-    form.addEventListener('submit', async (e)=>{
+    const formMsg = document.getElementById('formMsg');
+    
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const fd = new FormData(form);
-      const tel = (fd.get('phone')||'').trim();
-      if(!phoneVN.test(tel)){ alert('SĐT không hợp lệ (VN).'); return; }
-      ['utm_source','utm_medium','utm_campaign','utm_content'].forEach(k=>{
-        const v = new URLSearchParams(location.search).get(k); if(v) fd.append(k,v);
+      
+      const formData = new FormData(form);
+      const phone = (formData.get('phone') || '').trim();
+      
+      // Validate Vietnamese phone number
+      if (!phoneVN.test(phone)) {
+        alert('❌ Số điện thoại không hợp lệ (định dạng Việt Nam).');
+        return;
+      }
+      
+      // Add UTM parameters if available
+      ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach(key => {
+        const value = new URLSearchParams(location.search).get(key);
+        if (value) formData.append(key, value);
       });
-      fd.append('page', location.href);
-      try{
-        const r = await fetch(GS_ENDPOINT,{ method:'POST', body:fd });
-        if(!r.ok) throw new Error('Network');
-        document.getElementById('formMsg').style.display='block';
+      
+      // Add current page URL
+      formData.append('page', location.href);
+      formData.append('timestamp', new Date().toISOString());
+      
+      try {
+        const response = await fetch(GS_ENDPOINT, {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!response.ok) throw new Error('Network error');
+        
+        // Show success message
+        formMsg.style.display = 'block';
         form.reset();
-      }catch(err){ alert('Gửi thất bại. Thử lại hoặc liên hệ Zalo.'); }
-    });
-  </script>
-
-
-<div id="gigabrain-shadow-global" name="gigabrain" bis_skin_checked="1"></div></body></html>
