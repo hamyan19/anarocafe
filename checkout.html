@@ -33,12 +33,10 @@
     footer{margin-top:24px;color:#6e625a;font-size:12px;text-align:center}
     .toast{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:#2a221d;color:#fff;padding:10px 14px;border-radius:10px;z-index:9999}
 
-    /* Payment Methods - Updated styling for single option */
     .payment-methods{margin-top:12px}
     .payment-info{display:flex;gap:8px;align-items:center;padding:12px;border:1px solid var(--brand);border-radius:10px;background:#F8EBDD;margin-bottom:8px}
     .payment-info .ico{color:var(--brand)}
 
-    /* Popup modal */
     .backdrop{position:fixed;inset:0;background:#0007;display:none;align-items:center;justify-content:center;z-index:1000}
     .modal{width:min(520px,92vw);background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 10px 40px #0005;padding:16px}
     .modal h3{margin:0 0 6px}
@@ -47,7 +45,6 @@
     .modal .btn{background:#0001}
     .modal .cta{background:#F8EBDD}
 
-    /* Transfer info styling */
     .transfer-info{margin-top:12px}
     .bank-option{margin-bottom:12px;padding:12px;border:1px solid var(--border);border-radius:10px;background:#f9f9f9}
     .bank-header{font-weight:700;margin-bottom:8px;color:var(--brand)}
@@ -58,6 +55,8 @@
     .copy-btn:hover{background:#e6d4c4}
     .transfer-amount{margin-top:16px;padding:12px;background:#fff3cd;border:1px solid #ffeaa7;border-radius:10px}
     .amount-info .detail-row{margin:6px 0}
+    .order-code{margin-top:8px;padding:8px 12px;background:#f0f8f0;border:1px solid #d4e6f1;border-radius:8px;text-align:center}
+    .order-code strong{color:var(--brand);font-size:14px}
   
     @media (max-width: 768px) {
       .grid{grid-template-columns:1fr}
@@ -98,8 +97,8 @@
         </div>
         <div class="row2" style="margin-top:10px">
           <div>
-            <label for="email">Email</label>
-            <input id="email" type="email" placeholder="you@example.com" />
+            <label for="email">Email *</label>
+            <input id="email" type="email" placeholder="you@example.com" required />
             <div class="error" id="emailError"></div>
           </div>
           <div>
@@ -118,7 +117,6 @@
           <textarea id="note" placeholder="Ghi chú thêm (khung giờ nhận, địa chỉ chi tiết, v.v.)"></textarea>
         </div>
 
-        <!-- Payment Methods - Only Transfer -->
         <h3 class="title" style="margin-top:14px">Phương thức thanh toán</h3>
         <div class="payment-methods">
           <div class="payment-info">
@@ -154,6 +152,9 @@
       <!-- RIGHT: Order Summary -->
       <section class="card">
         <h2 class="title">Đơn hàng</h2>
+        <div class="order-code" id="orderCodeDisplay" style="display:none">
+          <strong>Mã đơn hàng: <span id="currentOrderCode"></span></strong>
+        </div>
         <div class="line"><strong>Tiền hàng</strong><span id="co-subtotal">0đ</span></div>
         <div class="line"><span>Cân nặng</span><span id="co-weight">0 kg</span></div>
         <div class="line"><span>Phí ship</span><span id="co-ship">0đ</span></div>
@@ -173,6 +174,9 @@
     <div class="modal">
       <h3 id="okTitle">🎉 Đặt hàng thành công</h3>
       <p id="okSub">Cảm ơn bạn! Chúng tôi sẽ liên hệ xác nhận sớm nhất.</p>
+      <div class="order-code">
+        <strong>Mã đơn hàng của bạn: <span id="successOrderCode"></span></strong>
+      </div>
       <div class="row">
         <a class="btn" href="index.html">← Tiếp tục mua</a>
         <a id="okZalo" class="btn" target="_blank" rel="noopener">Zalo</a>
@@ -266,101 +270,92 @@
 
   <script>
     // ====== Config ======
-    const FORM_EMAIL = "anmy1909@gmail.com"; 
+    const FORM_EMAIL = "anmy1909@gmail.com";
     const FORM_ENDPOINT = "https://formsubmit.co/ajax/" + encodeURIComponent(FORM_EMAIL);
-    
-    // ⚠️ QUAN TRỌNG: Thay URL này bằng URL Web App thực tế từ Google Apps Script
-    // URL phải có dạng: https://script.google.com/macros/s/[SCRIPT_ID]/exec
     const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbzNeAQvdDfass4qKYdS2C3PZtIVdRhlQp3rICd2a8H4f5qhOeGaq6dEvfiROLue2qjARA/exec";
-    
-    // Social links
+
     const SOCIAL_LINKS = {
       zalo: "https://zalo.me/84918337071",
       messenger: "https://m.me/anarocoffee",
       fanpage: "https://www.facebook.com/anarocoffee/"
     };
 
+    // Đầu số di động VN
+    const VALID_PREFIXES = [
+      '032','033','034','035','036','037','038','039','096','097','098','086',
+      '088','091','094','083','084','085','081','082',
+      '089','090','093','070','079','077','076','078',
+      '092','056','058',
+      '099','059',
+      '087',
+      '055'
+    ];
+
+    let currentOrderCode = '';
+
     // ====== Helpers ======
     const fmt = n => (n||0).toLocaleString('vi-VN') + "đ";
-    
-    function showToast(msg, type = 'info'){
-      const t = document.createElement('div'); 
-      t.className = 'toast'; 
-      t.textContent = msg; 
-      if(type === 'error') t.style.background = '#e74c3c';
-      if(type === 'success') t.style.background = '#27ae60';
+
+    function generateOrderCode() {
+      const ts = Date.now().toString();
+      const rnd = Math.floor(Math.random()*1000).toString().padStart(3,'0');
+      return 'ANARO' + ts.slice(-6) + rnd.slice(-2);
+    }
+
+    function showToast(msg, type='info'){
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = msg;
+      if(type==='error') t.style.background = '#e74c3c';
+      if(type==='success') t.style.background = '#27ae60';
       document.body.appendChild(t);
       setTimeout(()=>t.remove(), 3000);
     }
 
-    function showPopup(){
-      document.getElementById('backdrop').style.display = 'flex';
-    }
-
-    function hidePopup(){
-      document.getElementById('backdrop').style.display = 'none';
-    }
+    function showPopup(){ document.getElementById('backdrop').style.display='flex'; }
+    function hidePopup(){ document.getElementById('backdrop').style.display='none'; }
 
     function showQRModal(){
       const payload = readPayloadFromHash();
       const total = payload ? payload.total : 0;
-      const orderCode = 'ANARO' + Date.now().toString().slice(-6);
-      
-      // Update transfer amount and content
+      currentOrderCode = generateOrderCode();
+
       document.getElementById('transferAmount').textContent = fmt(total);
-      document.getElementById('transferContent').textContent = orderCode;
-      
-      document.getElementById('qrBackdrop').style.display = 'flex';
-    }
+      document.getElementById('transferContent').textContent = currentOrderCode;
 
+      document.getElementById('currentOrderCode').textContent = currentOrderCode;
+      document.getElementById('orderCodeDisplay').style.display = 'block';
+
+      document.getElementById('qrBackdrop').style.display='flex';
+    }
     function hideQRModal(){
-      document.getElementById('qrBackdrop').style.display = 'none';
+      document.getElementById('qrBackdrop').style.display='none';
+      document.getElementById('orderCodeDisplay').style.display='none';
     }
 
-    function copyToClipboard(text) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('✅ Đã copy: ' + text, 'success');
-        }).catch(() => {
-          fallbackCopy(text);
-        });
-      } else {
-        fallbackCopy(text);
-      }
+    function copyToClipboard(text){
+      if(navigator.clipboard?.writeText){
+        navigator.clipboard.writeText(text).then(()=>showToast('✅ Đã copy: ' + text,'success'))
+          .catch(()=>fallbackCopy(text));
+      } else fallbackCopy(text);
     }
-
-    function fallbackCopy(text) {
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        showToast('✅ Đã copy: ' + text, 'success');
-      } catch (err) {
-        showToast('❌ Không thể copy. Vui lòng copy thủ công.', 'error');
-      }
-      document.body.removeChild(textArea);
+    function fallbackCopy(text){
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); showToast('✅ Đã copy: ' + text,'success'); }
+      catch{ showToast('❌ Không thể copy. Vui lòng copy thủ công.','error'); }
+      document.body.removeChild(ta);
     }
-
-    function copyTransferContent() {
-      const content = document.getElementById('transferContent').textContent;
-      copyToClipboard(content);
+    function copyTransferContent(){
+      copyToClipboard(document.getElementById('transferContent').textContent);
     }
+    function confirmTransfer(){ hideQRModal(); processOrder(); }
 
-    function confirmTransfer(){
-      hideQRModal();
-      processOrder();
-    }
-
-    // Event listeners for modals
-    document.getElementById('backdrop').addEventListener('click', (e)=>{
+    document.getElementById('backdrop').addEventListener('click', e=>{
       if(e.target.id==='backdrop') hidePopup();
     });
-    
-    document.getElementById('qrBackdrop').addEventListener('click', (e)=>{
+    document.getElementById('qrBackdrop').addEventListener('click', e=>{
       if(e.target.id==='qrBackdrop') hideQRModal();
     });
 
@@ -370,14 +365,10 @@
         if(!m) return null;
         const json = decodeURIComponent(escape(atob(m[1])));
         return JSON.parse(json);
-      }catch(e){ 
-        console.log('No payload found in hash, using default values');
+      }catch(e){
         return {
-          items: [{name: 'Arabica Đà Lạt', size: '250g', grind: 'Nguyên hạt', qty: 2}],
-          subtotal: 180000,
-          weightKg: 0.5,
-          shipping: 29000,
-          total: 209000
+          items: [{name:'Arabica Đà Lạt', size:'250g', grind:'Nguyên hạt', qty:2}],
+          subtotal:180000, weightKg:0.5, shipping:29000, total:209000
         };
       }
     }
@@ -386,10 +377,9 @@
       document.getElementById('linkZalo').href = SOCIAL_LINKS.zalo;
       document.getElementById('linkMsg').href  = SOCIAL_LINKS.messenger;
       document.getElementById('linkFan').href  = SOCIAL_LINKS.fanpage;
-
-      document.getElementById('okZalo').href = SOCIAL_LINKS.zalo;
-      document.getElementById('okMsg').href  = SOCIAL_LINKS.messenger;
-      document.getElementById('okFan').href  = SOCIAL_LINKS.fanpage;
+      document.getElementById('okZalo').href   = SOCIAL_LINKS.zalo;
+      document.getElementById('okMsg').href    = SOCIAL_LINKS.messenger;
+      document.getElementById('okFan').href    = SOCIAL_LINKS.fanpage;
     }
 
     function renderOrderSummary(payload){
@@ -399,68 +389,61 @@
       document.getElementById('co-weight').textContent   = (weightKg||0).toFixed(2) + " kg";
       document.getElementById('co-ship').textContent     = fmt(shipping);
       document.getElementById('co-total').textContent    = fmt(total);
-      const lines = items.map(it => `• ${it.name} — ${it.size} — ${it.grind} × ${it.qty}`).join('<br>');
+      const lines = items.map(it=>`• ${it.name} — ${it.size} — ${it.grind} × ${it.qty}`).join('<br>');
       document.getElementById('co-items').innerHTML = lines || '';
+    }
+
+    function validatePhoneNumber(phone){
+      const clean = phone.replace(/\D/g,'');
+      if(!/^0\d{9}$/.test(clean)){
+        return {valid:false, message:'Số điện thoại phải có 10 chữ số và bắt đầu bằng 0'};
+      }
+      const prefix = clean.substring(0,3);
+      if(!VALID_PREFIXES.includes(prefix)){
+        return {valid:false, message:'Đầu số điện thoại không hợp lệ tại Việt Nam'};
+      }
+      return {valid:true, message:''};
     }
 
     function validateForm(){
       let isValid = true;
       const errors = {};
 
-      // Validate required fields
       const name = document.getElementById('recipient').value.trim();
-      if(!name) {
-        errors.recipient = 'Tên người nhận không được để trống';
-        isValid = false;
-      }
-
-      const phone = document.getElementById('phone').value.trim();
-      if(!phone) {
-        errors.phone = 'Số điện thoại không được để trống';
-        isValid = false;
-      } else if(!/^0[0-9]{9,10}$/.test(phone.replace(/\s/g, ''))) {
-        errors.phone = 'Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số';
-        isValid = false;
-      }
-
-      const address = document.getElementById('address').value.trim();
-      if(!address) {
-        errors.address = 'Địa chỉ không được để trống';
-        isValid = false;
-      }
-
-      // Validate email if provided
       const email = document.getElementById('email').value.trim();
-      if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+
+      if(!name) errors.recipient = 'Tên người nhận không được để trống';
+
+      if(!email){
+        errors.email = 'Email không được để trống';
+      } else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
         errors.email = 'Email không hợp lệ';
-        isValid = false;
       }
 
-      // Display errors and update UI
-      Object.keys(errors).forEach(field => {
-        const errorEl = document.getElementById(field + 'Error');
-        const inputEl = document.getElementById(field);
-        if(errorEl) errorEl.textContent = errors[field];
-        if(inputEl) {
-          inputEl.classList.remove('valid');
-          inputEl.classList.add('required');
-        }
-      });
+      if(!phone){
+        errors.phone = 'Số điện thoại không được để trống';
+      } else {
+        const chk = validatePhoneNumber(phone);
+        if(!chk.valid) errors.phone = chk.message;
+      }
 
-      // Clear errors for valid fields and mark as valid
-      ['recipient', 'phone', 'address', 'email'].forEach(field => {
-        if(!errors[field]) {
-          const errorEl = document.getElementById(field + 'Error');
-          const inputEl = document.getElementById(field);
-          if(errorEl) errorEl.textContent = '';
-          if(inputEl) {
-            inputEl.classList.remove('required');
-            if(inputEl.value.trim()) {
-              inputEl.classList.add('valid');
-            } else {
-              inputEl.classList.remove('valid');
-            }
-          }
+      if(!address) errors.address = 'Địa chỉ không được để trống';
+
+      ['recipient','email','phone','address'].forEach(id=>{
+        const input = document.getElementById(id);
+        const errEl = document.getElementById(id+'Error');
+        const msg = errors[id];
+        if(msg){
+          isValid = false;
+          input?.classList.add('required');
+          input?.classList.remove('valid');
+          if(errEl) errEl.textContent = msg;
+        } else {
+          input?.classList.remove('required');
+          if(input && input.value.trim()) input.classList.add('valid');
+          if(errEl) errEl.textContent = '';
         }
       });
 
@@ -474,139 +457,126 @@
       const address = document.getElementById('address').value.trim();
       const note = document.getElementById('note').value.trim();
       const gender = document.querySelector('input[name="gender"]:checked')?.value || 'Anh';
-      const payment = 'transfer'; // Always transfer now
-      
+      const payment = 'transfer';
       return { name, email, phone, address, note, gender, payment };
     }
 
-    // Real-time validation for phone number
-    function setupRealTimeValidation() {
-      const phoneInput = document.getElementById('phone');
-      
-      phoneInput.addEventListener('input', function() {
-        const phone = this.value.trim();
-        const errorEl = document.getElementById('phoneError');
-        
-        if(!phone) {
-          this.classList.remove('valid', 'required');
-          errorEl.textContent = '';
-        } else if(!/^0[0-9]{9,10}$/.test(phone.replace(/\s/g, ''))) {
-          this.classList.remove('valid');
-          this.classList.add('required');
-          errorEl.textContent = 'Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số';
-        } else {
-          this.classList.remove('required');
-          this.classList.add('valid');
-          errorEl.textContent = '';
-        }
-      });
-
-      // Real-time validation for other required fields
-      ['recipient', 'address'].forEach(fieldId => {
-        const input = document.getElementById(fieldId);
-        input.addEventListener('input', function() {
-          const value = this.value.trim();
-          const errorEl = document.getElementById(fieldId + 'Error');
-          
-          if(!value) {
-            this.classList.remove('valid', 'required');
-            errorEl.textContent = '';
+    function setupRealTimeValidation(){
+      // recipient + address
+      ['recipient','address'].forEach(id=>{
+        const input = document.getElementById(id);
+        const errEl = document.getElementById(id+'Error');
+        if(!input) return;
+        input.addEventListener('input', function(){
+          const v = this.value.trim();
+          if(!v){
+            this.classList.remove('valid','required');
+            if(errEl) errEl.textContent = '';
           } else {
-            this.classList.remove('required');
             this.classList.add('valid');
-            errorEl.textContent = '';
+            this.classList.remove('required');
+            if(errEl) errEl.textContent = '';
           }
         });
       });
 
-      // Email validation
+      // email
       const emailInput = document.getElementById('email');
-      emailInput.addEventListener('input', function() {
-        const email = this.value.trim();
-        const errorEl = document.getElementById('emailError');
-        
-        if(!email) {
-          this.classList.remove('valid', 'required');
-          errorEl.textContent = '';
-        } else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          this.classList.remove('valid');
-          this.classList.add('required');
-          errorEl.textContent = 'Email không hợp lệ';
-        } else {
-          this.classList.remove('required');
-          this.classList.add('valid');
-          errorEl.textContent = '';
-        }
-      });
+      const emailErr = document.getElementById('emailError');
+      if(emailInput){
+        emailInput.addEventListener('input', function(){
+          const v = this.value.trim();
+          if(!v){
+            this.classList.remove('valid','required');
+            if(emailErr) emailErr.textContent = '';
+          } else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){
+            this.classList.add('required');
+            this.classList.remove('valid');
+            if(emailErr) emailErr.textContent = 'Email không hợp lệ';
+          } else {
+            this.classList.add('valid');
+            this.classList.remove('required');
+            if(emailErr) emailErr.textContent = '';
+          }
+        });
+      }
+
+      // phone
+      const phoneInput = document.getElementById('phone');
+      const phoneErr = document.getElementById('phoneError');
+      if(phoneInput){
+        phoneInput.addEventListener('input', function(){
+          const v = this.value.trim();
+          if(!v){
+            this.classList.remove('valid','required');
+            if(phoneErr) phoneErr.textContent = '';
+            return;
+          }
+          const chk = validatePhoneNumber(v);
+          if(!chk.valid){
+            this.classList.add('required');
+            this.classList.remove('valid');
+            if(phoneErr) phoneErr.textContent = chk.message;
+          } else {
+            this.classList.add('valid');
+            this.classList.remove('required');
+            if(phoneErr) phoneErr.textContent = '';
+          }
+        });
+      }
     }
 
-    // Fixed JSONP function để tránh CORS
-    function sendToGoogleSheets(orderData) {
-      return new Promise((resolve, reject) => {
-        try {
+    // JSONP to Google Sheets
+    function sendToGoogleSheets(orderData){
+      return new Promise((resolve,reject)=>{
+        try{
           const callbackName = 'googleSheetsCallback_' + Date.now();
           const script = document.createElement('script');
-          
-          window[callbackName] = function(response) {
-            // Cleanup
+
+          window[callbackName] = function(response){
             delete window[callbackName];
-            if (script.parentNode) {
-              document.head.removeChild(script);
-            }
-            
-            console.log('📊 Google Sheets response:', response);
-            
-            if (response && (response.success || response.result === 'success')) {
+            if(script.parentNode) document.head.removeChild(script);
+            if(response && (response.success || response.result==='success')){
               resolve(response);
             } else {
               reject(new Error(response ? (response.message || response.error || 'Unknown error') : 'Unknown error from Google Sheets'));
             }
           };
-          
-          script.onerror = function() {
+
+          script.onerror = function(){
             delete window[callbackName];
-            if (script.parentNode) {
-              document.head.removeChild(script);
-            }
+            if(script.parentNode) document.head.removeChild(script);
             reject(new Error('JSONP request failed - network error'));
           };
-          
-          // Tạo URL với callback và data
+
           const params = new URLSearchParams({
             callback: callbackName,
             data: JSON.stringify(orderData)
           });
-          
           script.src = `${GOOGLE_SHEETS_URL}?${params.toString()}`;
           document.head.appendChild(script);
-          
-          // Timeout sau 15 giây
-          setTimeout(() => {
-            if (window[callbackName]) {
+
+          setTimeout(()=>{
+            if(window[callbackName]){
               delete window[callbackName];
-              if (script.parentNode) {
-                document.head.removeChild(script);
-              }
+              if(script.parentNode) document.head.removeChild(script);
               reject(new Error('Request timeout - Google Sheets không phản hồi'));
             }
           }, 15000);
-          
-        } catch (error) {
-          reject(error);
-        }
+        }catch(err){ reject(err); }
       });
     }
 
     async function sendOrderByEmail(orderData){
-      try {
+      try{
         const r = orderData.recipient || {};
         const itemsStr = (orderData.items||[]).map(i=>`${i.name} — ${i.size} — ${i.grind} × ${i.qty}`).join("; ");
-        
         const body = {
           _subject: "Đơn hàng mới từ ANARO COFFEE",
           _template: "table",
           _captcha: false,
           _next: window.location.href,
+          "Mã đơn hàng": orderData.orderCode || 'N/A',
           "Người nhận": `${r.gender||""} ${r.name||""}`.trim(),
           "Email": r.email||"N/A",
           "SĐT": r.phone||"",
@@ -618,148 +588,99 @@
           "Tổng": fmt(orderData.total||0),
           "Cân nặng (kg)": (orderData.weightKg||0),
           "Chi tiết": itemsStr,
-          "Mã đơn": orderData.orderCode || 'N/A',
           "Thời gian": new Date().toLocaleString('vi-VN')
         };
 
-        console.log('📧 Sending email with data:', body);
-
         const res = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/json", 
-            "Accept": "application/json" 
-          },
+          method:"POST",
+          headers:{ "Content-Type":"application/json", "Accept":"application/json" },
           body: JSON.stringify(body)
         });
-
-        console.log('📧 Email response status:', res.status);
-        
-        if(!res.ok) { 
+        if(!res.ok){
           const errorText = await res.text();
-          console.error('📧 Email error response:', errorText);
           throw new Error(`HTTP ${res.status}: ${errorText}`);
         }
-        
-        const result = await res.json().catch(()=>({}));
-        console.log('📧 Email success response:', result);
-        return result;
-      } catch (error) {
-        console.error('📧 Email sending failed:', error);
-        throw error;
-      }
+        return await res.json().catch(()=>({}));
+      }catch(err){ throw err; }
     }
 
-    async function processOrder() {
+    async function processOrder(){
       const orderBtn = document.getElementById('placeOrder');
-      
-      try {
-        // Disable button and show loading
+      try{
         orderBtn.disabled = true;
         orderBtn.textContent = 'Đang xử lý...';
         orderBtn.classList.add('loading');
 
         const payload = readPayloadFromHash() || {};
         const formData = getFormData();
-        
+
         const orderData = {
           ...payload,
           recipient: formData,
           contact: { ...SOCIAL_LINKS },
           orderTime: new Date().toISOString(),
-          orderCode: 'ANARO' + Date.now().toString().slice(-6)
+          orderCode: currentOrderCode || generateOrderCode()
         };
 
-        console.log('🚀 Processing order:', orderData);
+        let sheetsSuccess=false, emailSuccess=false, sheetsError=null, emailError=null;
 
-        let sheetsSuccess = false;
-        let emailSuccess = false;
-        let sheetsError = null;
-        let emailError = null;
-
-        // Try Google Sheets first
-        try {
-          console.log('📊 Attempting Google Sheets...');
+        try{
           const sheetsResult = await sendToGoogleSheets(orderData);
-          console.log('✅ Google Sheets success:', sheetsResult);
+          console.log('Sheets OK:', sheetsResult);
           sheetsSuccess = true;
-        } catch (error) {
-          console.error('❌ Google Sheets failed:', error);
-          sheetsError = error;
-        }
+        }catch(e){ sheetsError = e; console.error('Sheets ERR:', e); }
 
-        // Try email as backup
-        try {
-          console.log('📧 Attempting email backup...');
+        try{
           const emailResult = await sendOrderByEmail(orderData);
-          console.log('✅ Email backup success:', emailResult);
+          console.log('Email OK:', emailResult);
           emailSuccess = true;
-        } catch (error) {
-          console.error('❌ Email backup failed:', error);
-          emailError = error;
-        }
+        }catch(e){ emailError = e; console.error('Email ERR:', e); }
 
-        // Show success if at least one method worked
-        if (sheetsSuccess || emailSuccess) {
-          // Clear form
-          document.getElementById('recipient').value = '';
-          document.getElementById('email').value = '';
-          document.getElementById('phone').value = '';
-          document.getElementById('address').value = '';
-          document.getElementById('note').value = '';
-          
-          // Clear validation classes
-          ['recipient', 'email', 'phone', 'address'].forEach(fieldId => {
-            const input = document.getElementById(fieldId);
-            const error = document.getElementById(fieldId + 'Error');
-            if(input) input.classList.remove('valid', 'required');
-            if(error) error.textContent = '';
+        if(sheetsSuccess || emailSuccess){
+          document.getElementById('successOrderCode').textContent = orderData.orderCode;
+
+          // clear form
+          ['recipient','email','phone','address','note'].forEach(id=>{
+            const el = document.getElementById(id);
+            if(el) el.value = '';
           });
-          
-          // Reset gender to default
+          ['recipient','email','phone','address'].forEach(id=>{
+            const el = document.getElementById(id);
+            const er = document.getElementById(id+'Error');
+            el?.classList.remove('valid','required');
+            if(er) er.textContent = '';
+          });
           document.querySelector('input[name="gender"][value="Anh"]').checked = true;
-          
-          // Show success popup
+          document.getElementById('orderCodeDisplay').style.display='none';
+
           showPopup();
-          showToast('✅ Đặt hàng thành công!', 'success');
-          
-          if (sheetsSuccess) {
-            console.log('📊 Đơn hàng đã được lưu vào Google Sheets');
-          }
-          if (emailSuccess) {
-            console.log('📧 Đơn hàng đã được gửi qua email');
-          }
+          showToast('✅ Đặt hàng thành công!','success');
         } else {
-          let errorMsg = 'Không thể xử lý đơn hàng. ';
-          if (sheetsError) errorMsg += `Google Sheets: ${sheetsError.message}. `;
-          if (emailError) errorMsg += `Email: ${emailError.message}. `;
-          errorMsg += 'Vui lòng liên hệ trực tiếp qua Zalo/Messenger.';
-          
-          throw new Error(errorMsg);
+          let msg = 'Không thể xử lý đơn hàng. ';
+          if(sheetsError) msg += `Google Sheets: ${sheetsError.message}. `;
+          if(emailError) msg += `Email: ${emailError.message}. `;
+          msg += 'Vui lòng liên hệ trực tiếp qua Zalo/Messenger.';
+          throw new Error(msg);
         }
-        
-      } catch(err) {
-        console.error('💥 Order processing error:', err);
-        showToast(err.message || "Có lỗi xảy ra, vui lòng thử lại hoặc liên hệ trực tiếp qua Zalo/Messenger.", 'error');
-      } finally {
-        // Re-enable button
+      }catch(err){
+        console.error('Order error:', err);
+        showToast(err.message || 'Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+      }finally{
         orderBtn.disabled = false;
         orderBtn.textContent = 'Đặt hàng';
         orderBtn.classList.remove('loading');
       }
     }
 
-    document.getElementById('placeOrder').addEventListener('click', async ()=>{
-      if(!validateForm()) {
-        showToast("Vui lòng điền đầy đủ thông tin bắt buộc và kiểm tra lại số điện thoại", 'error');
+    document.getElementById('placeOrder').addEventListener('click', ()=>{
+      if(!validateForm()){
+        showToast('Vui lòng điền đầy đủ thông tin bắt buộc và kiểm tra lại thông tin','error');
         return;
       }
-
-      // Since we only have transfer payment method now, always show QR modal
       showQRModal();
     });
 
-    // Initialize
+    // Init
     (function init(){
       bindSocialLinks();
       renderOrderSummary(readPayloadFromHash());
