@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FAQ — Câu hỏi thường gặp về Cà phê Việt Nam</title>
+  <title>FAQ — Câu hỏi thường gặp về Cà phê </title>
   <style>
     :root{
       --bg:#f6efe9; --text:#2a221d; --panel:#a47148; --ink:#F8EBDD;
@@ -13,7 +13,7 @@
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
          background:linear-gradient(180deg,#fff,#f6efe9 50%,#f0e2d6);color:var(--text)}
     .wrap{max-width:900px;margin:24px auto;padding:0 16px}
-    header.page{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:8px}
+    header.page{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:8px;position:sticky;top:0;background:rgba(246,239,233,0.95);backdrop-filter:blur(10px);z-index:100;padding:12px 0;border-bottom:1px solid rgba(233,215,197,0.3)}
     header h1{margin:0;font-size:24px}
     .intro{margin:6px 0 14px;color:#6a5c54}
     .search{display:flex;gap:8px;margin-bottom:16px}
@@ -32,13 +32,16 @@
     .footer{margin:24px 0 12px;text-align:center;color:#806a5b}
     .chipnav{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
     .chipnav a{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #0001;background:#0001;color:#6b3f25;text-decoration:none;font-weight:700}
+    .home{color:#6b3f25;text-decoration:none;border:1px solid var(--border);padding:8px 12px;border-radius:10px;background:var(--card);font-weight:700;transition:all 0.2s ease}
+    .home:hover{background:#a47148;color:var(--ink);transform:translateY(-1px)}
     .strong{font-weight:700;color:#a47148}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header class="page">
-      <h1>☕ FAQ Cà phê Việt Nam</h1>
+      <h1>☕ Câu hỏi thường gặp</h1>
+      <a class="home" href="https://anarocafe.vercel.app">← Về trang chủ</a>
     </header>
 
     <p class="intro">Tổng hợp các câu hỏi thường gặp về cà phê từ chọn hạt, cách pha, bảo quản đến tác động sức khỏe. Gõ từ khóa để tìm kiếm nhanh.</p>
