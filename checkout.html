@@ -47,13 +47,7 @@
     .modal .btn{background:#0001}
     .modal .cta{background:#F8EBDD}
 
-    /* QR Code Modal */
-    .qr-modal{max-width:400px}
-    .qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
-    .qr-option{text-align:center;padding:12px;border:1px solid var(--border);border-radius:8px;cursor:pointer}
-    .qr-option:hover{background:#f5f5f5}
-    .qr-code{width:200px;height:200px;background:#f0f0f0;margin:12px auto;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#666}
-
+  
     @media (max-width: 768px) {
       .grid{grid-template-columns:1fr}
       .row2{grid-template-columns:1fr}
@@ -179,40 +173,84 @@
     </div>
   </div>
 
-  <!-- QR Code Modal -->
+  <!-- Transfer Modal -->
   <div id="qrBackdrop" class="backdrop" role="dialog" aria-modal="true">
     <div class="modal qr-modal">
-      <h3>Chuyển khoản</h3>
-      <p>Chọn ngân hàng để hiển thị mã QR:</p>
-      <div class="qr-grid">
-        <div class="qr-option" onclick="showQR('momo')">
-          <strong>💜 Momo</strong><br>
-          <small>0918337071</small>
+      <h3>💳 Thông tin chuyển khoản</h3>
+      <p>Vui lòng chuyển khoản theo thông tin bên dưới:</p>
+      
+      <div class="transfer-info">
+        <div class="bank-option">
+          <div class="bank-header">🏦 <strong>Vietcombank</strong></div>
+          <div class="bank-details">
+            <div class="detail-row">
+              <span>Số tài khoản:</span>
+              <div class="copy-group">
+                <code>0721000539033</code>
+                <button class="copy-btn" onclick="copyToClipboard('0721000539033')">📋</button>
+              </div>
+            </div>
+            <div class="detail-row">
+              <span>Tên tài khoản:</span>
+              <strong>HÀ MỸ AN</strong>
+            </div>
+          </div>
         </div>
-        <div class="qr-option" onclick="showQR('vcb')">
-          <strong>🏦 Vietcombank</strong><br>
-          <small>0721000539033</small><br>
-          <small style="color: #666;">Hà Mỹ An</small>
+
+        <div class="bank-option">
+          <div class="bank-header">🏛️ <strong>MBBank</strong></div>
+          <div class="bank-details">
+            <div class="detail-row">
+              <span>Số tài khoản:</span>
+              <div class="copy-group">
+                <code>90919091986</code>
+                <button class="copy-btn" onclick="copyToClipboard('90919091986')">📋</button>
+              </div>
+            </div>
+            <div class="detail-row">
+              <span>Tên tài khoản:</span>
+              <strong>HÀ MỸ AN</strong>
+            </div>
+          </div>
         </div>
-        <div class="qr-option" onclick="showQR('mb')">
-          <strong>🏛️ MBBank</strong><br>
-          <small>90919091986</small><br>
-          <small style="color: #666;">Hà Mỹ An</small>
+
+        <div class="bank-option">
+          <div class="bank-header">💜 <strong>Momo</strong></div>
+          <div class="bank-details">
+            <div class="detail-row">
+              <span>Số điện thoại:</span>
+              <div class="copy-group">
+                <code>0918337071</code>
+                <button class="copy-btn" onclick="copyToClipboard('0918337071')">📋</button>
+              </div>
+            </div>
+            <div class="detail-row">
+              <span>Tên tài khoản:</span>
+              <strong>ANARO COFFEE</strong>
+            </div>
+          </div>
         </div>
-        <div class="qr-option" onclick="hideQRModal()">
-          <strong>❌ Đóng</strong>
+
+        <div class="transfer-amount">
+          <div class="amount-info">
+            <div class="detail-row">
+              <span>Số tiền:</span>
+              <strong id="transferAmount" style="color: #e74c3c; font-size: 18px;">0đ</strong>
+            </div>
+            <div class="detail-row">
+              <span>Nội dung:</span>
+              <div class="copy-group">
+                <code id="transferContent">ANARO ORDER</code>
+                <button class="copy-btn" onclick="copyTransferContent()">📋</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div id="qrDisplay" style="display:none;">
-        <div class="qr-code" id="qrCode">QR Code sẽ hiển thị ở đây</div>
-        <p style="text-align:center;margin:8px 0;">
-          <strong>Số tiền: </strong><span id="qrAmount">0đ</span><br>
-          <strong>Nội dung: </strong><span id="qrContent">ANARO ORDER</span>
-        </p>
-        <div class="row">
-          <button class="btn" onclick="hideQRModal()">← Quay lại</button>
-          <button class="btn cta" onclick="confirmTransfer()">✓ Đã chuyển</button>
-        </div>
+      
+      <div class="row" style="margin-top: 16px;">
+        <button class="btn" onclick="hideQRModal()">← Quay lại</button>
+        <button class="btn cta" onclick="confirmTransfer()">✓ Đã chuyển xong</button>
       </div>
     </div>
   </div>
@@ -600,4 +638,5 @@
   </script>
 </body>
 </html>
+
 
