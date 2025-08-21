@@ -5,7 +5,7 @@
   <link>https://anarocafe.vercel.app/blog.html</link>
   <description>Cà phê, pha chế, kinh doanh quán.</description>
   <language>vi</language>
-  <lastBuildDate>Thu, 21 Aug 2025 02:57:09 GMT</lastBuildDate>
+  <lastBuildDate>Thu, 21 Aug 2025 03:02:22 GMT</lastBuildDate>
 
   <item>
     <title><![CDATA[Chào mừng đến với ANARO Coffee Blog]]></title>
@@ -13,6 +13,14 @@
     <guid>https://anarocafe.vercel.app/blog/posts/2025-08-21-chao-mung-anaro.html</guid>
     <pubDate>Thu, 21 Aug 2025 00:00:00 GMT</pubDate>
     <description><![CDATA[Bài viết mở màn cho ANARO Coffee Blog.]]></description>
+  </item>
+
+  <item>
+    <title><![CDATA[Cách pha cà phê phin ngon - Bí quyết từ chuyên gia]]></title>
+    <link>https://anarocafe.vercel.app/blog/posts/2025-01-15-cach-pha-ca-phe-phin-ngon.html</link>
+    <guid>https://anarocafe.vercel.app/blog/posts/2025-01-15-cach-pha-ca-phe-phin-ngon.html</guid>
+    <pubDate>Wed, 15 Jan 2025 00:00:00 GMT</pubDate>
+    <description><![CDATA[Khám phá bí quyết pha cà phê phin ngon từ chuyên gia ANARO Coffee. Hướng dẫn chi tiết từ chọn hạt đến kỹ thuật pha, giúp bạn có ly cà phê hoàn hảo tại nhà.]]></description>
   </item>
 </channel>
 </rss>
