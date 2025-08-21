@@ -4,10 +4,12 @@
   "description": "ANARO Coffee Blog Auto Generator",
   "scripts": {
     "build-blog": "node scripts/generate-blog.js",
+    "make-post": "node scripts/make-post.js",
     "test": "echo \"ready\""
   },
   "dependencies": {
-    "fs-extra": "^11.2.0"
+    "fs-extra": "^11.2.0",
+    "cheerio": "^1.0.0-rc.12"
   },
   "license": "MIT"
 }
