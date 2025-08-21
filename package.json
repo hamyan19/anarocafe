@@ -4,8 +4,7 @@
   "description": "ANARO Coffee Blog Auto Generator",
   "scripts": {
     "build-blog": "node scripts/generate-blog.js",
-    "make-post": "node scripts/make-post.js",
-    "test": "echo \"ready\""
+    "make-post": "node scripts/make-post.js"
   },
   "dependencies": {
     "fs-extra": "^11.2.0",
