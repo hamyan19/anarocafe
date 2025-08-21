@@ -3,38 +3,40 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'blog/posts/**'
-      - 'blog/templates/**'
-      - 'blog/assets/**'
+      - 'blog/**'          # mọi thay đổi trong /blog
       - 'scripts/**'
-      - '!blog.html'      # tránh lặp vô hạn khi commit file sinh ra
+      - '!blog.html'       # loại trừ file sinh ra
       - '!sitemap.xml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: build-blog-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: 20        # bỏ cache để khỏi cần lockfile
+      - name: Debug tree
+        run: |
+          pwd
+          ls -la
+          ls -la blog || true
+          ls -la blog/templates || true
+          ls -la blog/posts || true
+          cat package.json
       - name: Install deps
-        run: npm install
+        run: npm install --no-audit --no-fund
       - name: Generate blog
-        run: npm run build-blog
+        run: node scripts/generate-blog.js
       - name: Commit generated files
         run: |
           git config user.email "actions@github.com"
           git config user.name "github-actions"
           git add blog.html
-          git diff --staged --quiet || git commit -m "chore: auto-generate blog [skip ci]"
+          git diff --staged --quiet || git commit -m "auto: generate blog [skip ci]"
           git push
