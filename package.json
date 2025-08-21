@@ -1,0 +1,13 @@
+{
+  "name": "anarocafe-blog",
+  "version": "1.0.0",
+  "description": "ANARO Coffee Blog Auto Generator",
+  "scripts": {
+    "build-blog": "node scripts/generate-blog.js",
+    "test": "echo \"ready\""
+  },
+  "dependencies": {
+    "fs-extra": "^11.2.0"
+  },
+  "license": "MIT"
+}
