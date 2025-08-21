@@ -1,0 +1,41 @@
+name: Build ANARO Blog
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'blog/posts/**'
+      - 'blog/templates/**'
+      - 'blog/assets/**'
+      - 'scripts/**'
+    paths-ignore:
+      - 'blog.html'
+      - 'sitemap.xml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-blog-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - name: Install deps
+        run: npm install
+      - name: Generate blog
+        run: npm run build-blog
+      - name: Commit generated files
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          git add blog.html
+          git diff --staged --quiet || git commit -m "chore: auto-generate blog [skip ci]"
+          git push
