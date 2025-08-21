@@ -33,10 +33,11 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Generate blog
         run: node scripts/generate-blog.js
-      - name: Commit generated files
+           - name: Commit generated files
         run: |
           git config user.email "actions@github.com"
           git config user.name "github-actions"
-          git add blog.html
-          git diff --staged --quiet || git commit -m "auto: generate blog [skip ci]"
+          git add blog.html blog sitemap.xml rss.xml
+          git diff --staged --quiet || git commit -m "auto: generate blog/sitemap/rss [skip ci]"
           git push
+
