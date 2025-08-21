@@ -1,0 +1,48 @@
+name: Make Post
+on:
+  workflow_dispatch:
+    inputs:
+      input_path:
+        description: 'Đường dẫn file nháp trong repo (vd: drafts/ten-bai.html)'
+        required: true
+      title:
+        required: false
+      description:
+        required: false
+      tags:
+        required: false
+      date:
+        required: false
+      cover:
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci || npm i
+      - name: Make post
+        run: |
+          set -e
+          CMD='node scripts/make-post.js "${{ github.event.inputs.input_path }}"'
+          [ -n "${{ github.event.inputs.title }}" ] && CMD="$CMD --title '${{ github.event.inputs.title }}'"
+          [ -n "${{ github.event.inputs.description }}" ] && CMD="$CMD --description '${{ github.event.inputs.description }}'"
+          [ -n "${{ github.event.inputs.tags }}" ] && CMD="$CMD --tags '${{ github.event.inputs.tags }}'"
+          [ -n "${{ github.event.inputs.date }}" ] && CMD="$CMD --date '${{ github.event.inputs.date }}'"
+          [ -n "${{ github.event.inputs.cover }}" ] && CMD="$CMD --cover '${{ github.event.inputs.cover }}'"
+          echo "$CMD"
+          eval "$CMD"
+      - name: Commit generated post
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "github-actions"
+          git add blog/posts/*.html
+          git commit -m "make-post: generate from ${{ github.event.inputs.input_path }} [skip ci]" || echo "No changes"
+          git push
