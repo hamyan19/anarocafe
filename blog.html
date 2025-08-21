@@ -94,6 +94,10 @@
     @media (prefers-contrast: high){:root{--primary:#000;--secondary:#333;--text:#000;--border:#666}.post-card{border:2px solid var(--border)}.tag-filter{border:2px solid var(--primary)}}
     @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.post-card:hover{transform:none}}
     @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .pagination{display:flex;gap:10px;justify-content:center;margin:20px 0}
+.pagination .page{padding:8px 12px;border:1px solid var(--primary);border-radius:10px;text-decoration:none;color:var(--primary)}
+.pagination .page.active,.pagination .page:hover{background:var(--primary);color:#fff}
+
   </style>
 </head>
 <body>
@@ -139,7 +143,7 @@
       </div>
 
       <div class="blog-stats">
-        <p>📝 <strong>1</strong> bài viết | Cập nhật: 09:15:09 21/8/2025</p>
+        <p>📝 <strong>1</strong> bài viết | Cập nhật: 09:18:57 21/8/2025</p>
       </div>
 
       <div class="posts-grid" id="postsGrid">
