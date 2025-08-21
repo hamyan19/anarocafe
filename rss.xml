@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>ANARO Coffee Blog</title>
+  <link>https://anarocafe.vercel.app/blog.html</link>
+  <description>Cà phê, pha chế, kinh doanh quán.</description>
+  <language>vi</language>
+  <lastBuildDate>Thu, 21 Aug 2025 02:23:14 GMT</lastBuildDate>
+
+  <item>
+    <title><![CDATA[Chào mừng đến với ANARO Coffee Blog]]></title>
+    <link>https://anarocafe.vercel.app/blog/posts/2025-08-21-chao-mung-anaro.html</link>
+    <guid>https://anarocafe.vercel.app/blog/posts/2025-08-21-chao-mung-anaro.html</guid>
+    <pubDate>Thu, 21 Aug 2025 00:00:00 GMT</pubDate>
+    <description><![CDATA[Bài viết mở màn cho ANARO Coffee Blog.]]></description>
+  </item>
+</channel>
+</rss>
