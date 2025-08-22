@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>[Demo] Cà phê phin: Cách pha chuẩn vị</title>
+
+  <!-- Canonical theo pipeline của bạn -->
+  <link rel="canonical" href="https://anarocafe.vercel.app/blog/posts/2025-08-23-demo-tailwind.html">
+
+  <!-- Post CSS hiện tại của bạn (tuỳ chọn, để giữ style cũ nếu cần) -->
+  <link rel="stylesheet" href="/blog/assets/css/post.css">
+
+  <!-- Tailwind CDN cho demo; production nên dùng build với purge -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { DEFAULT: '#7a4b2b', 50:'#f7efe9',100:'#efdfd1',200:'#e1c3a8',300:'#cea07b',400:'#b87c51',500:'#7a4b2b',600:'#5f3a21',700:'#4a2d1a',800:'#372212',900:'#24160c'}
+          },
+          borderRadius: { 'xl': '1rem' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-stone-50 text-stone-900 antialiased">
+<!-- META-START
+title: "[Demo] Cà phê phin: Cách pha chuẩn vị"
+description: "Hướng dẫn chi tiết cách pha cà phê phin nhỏ và phin lớn chuẩn vị, mẹo ủ không cặn, tỷ lệ nước-cà hợp lý, và FAQ thường gặp."
+tags: ["cà phê phin","cách pha","brew guide","ANARO Coffee"]
+date: "2025-08-23"
+cover: "/blog/assets/images/demo-phin.jpg"
+author: "ANARO Coffee"
+META-END -->
+
+  <!-- Header -->
+  <header class="border-b border-stone-200 bg-white">
+    <div class="mx-auto max-w-3xl px-4 py-4">
+      <nav class="text-sm text-stone-600">
+        <a href="/" class="text-brand hover:underline">ANARO</a>
+        <span class="mx-2">/</span>
+        <a href="/blog/" class="hover:underline">Blog</a>
+        <span class="mx-2">/</span>
+        <span class="text-stone-500">Cà phê phin</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Article -->
+  <main class="mx-auto max-w-3xl px-4 py-8">
+    <!-- Title block -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-semibold tracking-tight text-stone-900">Cà phê phin: Cách pha chuẩn vị cho quán và tại nhà</h1>
+      <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-stone-600">
+        <time datetime="2025-08-23">23/08/2025</time>
+        <span class="h-1 w-1 rounded-full bg-stone-300"></span>
+        <span>~6 phút đọc</span>
+        <span class="h-1 w-1 rounded-full bg-stone-300"></span>
+        <div class="flex gap-2">
+          <span class="rounded-full bg-stone-200 px-2 py-1">cà phê phin</span>
+          <span class="rounded-full bg-stone-200 px-2 py-1">brew guide</span>
+        </div>
+      </div>
+      <figure class="mt-5 overflow-hidden rounded-xl border border-stone-200">
+        <img src="/blog/assets/images/demo-phin.jpg" alt="Ly cà phê phin" class="w-full object-cover">
+      </figure>
+    </div>
+
+    <!-- TOC -->
+    <aside class="mb-8 rounded-xl border border-stone-200 bg-white p-4">
+      <h2 class="mb-2 text-sm font-medium text-stone-700">Mục lục</h2>
+      <ol class="list-decimal space-y-1 pl-5 text-sm text-stone-700">
+        <li><a href="#nguyen-lieu" class="text-brand hover:underline">Nguyên liệu và dụng cụ</a></li>
+        <li><a href="#ti-le" class="text-brand hover:underline">Tỷ lệ pha chuẩn</a></li>
+        <li><a href="#cach-pha-nho" class="text-brand hover:underline">Cách pha phin nhỏ 25g</a></li>
+        <li><a href="#cach-pha-lon" class="text-brand hover:underline">Cách pha phin lớn 100–200g</a></li>
+        <li><a href="#meo" class="text-brand hover:underline">Mẹo ủ không cặn</a></li>
+        <li><a href="#faq" class="text-brand hover:underline">FAQ</a></li>
+      </ol>
+    </aside>
+
+    <!-- Content -->
+    <article class="prose prose-stone max-w-none">
+      <h2 id="nguyen-lieu">Nguyên liệu và dụng cụ</h2>
+      <ul>
+        <li>Bột cà phê rang xay cho phin <strong>độ xay trung bình</strong> (coarser hơn espresso).</li>
+        <li>Phin inox hoặc nhôm 170–200&nbsp;ml, nắp, nén.</li>
+        <li>Nước nóng 92–96&nbsp;°C. Cốc thủy tinh, cân, ấm rót cổ ngỗng.</li>
+      </ul>
+
+      <h2 id="ti-le">Tỷ lệ pha chuẩn</h2>
+      <p>Gợi ý cho vị đậm vừa, hậu ngọt:</p>
+      <table>
+        <thead>
+          <tr><th>Cân cà phê</th><th>Nước nóng</th><th>Thời gian nhỏ giọt</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>25&nbsp;g</td><td>120–140&nbsp;g</td><td>4–6 phút</td></tr>
+          <tr><td>50&nbsp;g</td><td>240–280&nbsp;g</td><td>6–8 phút</td></tr>
+          <tr><td>100–200&nbsp;g</td><td>1:10–1:12</td><td>8–12 phút</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="cach-pha-nho">Cách pha phin nhỏ 25&nbsp;g</h2>
+      <h3>1) Chuẩn bị</h3>
+      <ul>
+        <li>Tráng phin bằng nước nóng để ổn định nhiệt.</li>
+        <li>Cho <strong>25&nbsp;g</strong> bột vào phin. Lắc đều mặt bột.</li>
+      </ul>
+      <h3>2) Ủ nở</h3>
+      <p>Rót <strong>30–40&nbsp;g</strong> nước, chờ <strong>45–60&nbsp;s</strong> cho bọt khí thoát.</p>
+      <h3>3) Rót chính</h3>
+      <p>Chia 2–3 lần rót đến <strong>120–140&nbsp;g</strong>. Tốc độ rót ổn định, tâm sang rìa.</p>
+      <h3>4) Hoàn tất</h3>
+      <p>Nhỏ giọt đều, tổng thời gian <strong>4–6 phút</strong>. Điều chỉnh bằng độ xay.</p>
+
+      <h2 id="cach-pha-lon">Cách pha phin lớn 100–200&nbsp;g</h2>
+      <p>Dùng cho quán, ủ trong bình lớn:</p>
+      <ul>
+        <li>Tỷ lệ tổng quát <strong>1:10–1:12</strong> tùy gu.</li>
+        <li>Rót ủ 60–90&nbsp;s, sau đó rót chia nhiều vòng. Giữ nhiệt bình tốt.</li>
+        <li>Lọc lại bằng lưới mịn nếu cần giảm cặn.</li>
+      </ul>
+
+      <h2 id="meo">Mẹo ủ không cặn</h2>
+      <ul>
+        <li><strong>Độ xay</strong>: quá mịn gây tắc, quá to gây nhạt. Mục tiêu drip đều, hạt mưa.</li>
+        <li><strong>Nén nhẹ</strong>: chỉ san mặt, không nén mạnh như espresso.</li>
+        <li><strong>Nước</strong>: 92–96&nbsp;°C. Nước quá sôi dễ đắng chát.</li>
+        <li><strong>Rửa phin sạch</strong>: dầu tồn đọng làm vị gắt.</li>
+      </ul>
+
+      <h2 id="faq">Câu hỏi thường gặp</h2>
+      <h3>Phin nhôm hay inox ngon hơn?</h3>
+      <p>Ảnh hưởng chính là độ ổn định nhiệt và lỗ lọc. Inox bền, giữ nhiệt tốt hơn đa số phin nhôm mỏng.</p>
+      <h3>Tại sao cà phê bị chua?</h3>
+      <p>Có thể do nhiệt thấp, thời gian chiết ngắn, hoặc độ xay quá to. Tăng nhiệt, xay mịn hơn, kéo dài thời gian.</p>
+      <h3>Có nên thêm muối?</h3>
+      <p>Không khuyến nghị. Hãy tối ưu nguyên nhân gốc: hạt, rang, độ xay, nước, thời gian.</p>
+    </article>
+
+    <!-- Author box -->
+    <section class="mt-10 rounded-xl border border-stone-200 bg-white p-5">
+      <div class="flex items-center gap-4">
+        <img src="/blog/assets/images/author-anaro.jpg" alt="ANARO Coffee" class="h-12 w-12 rounded-full object-cover">
+        <div>
+          <p class="text-sm font-medium text-stone-900">ANARO Coffee</p>
+          <p class="text-sm text-stone-600">Xưởng rang từ 2015. Rang tươi mỗi ngày.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prev/Next -->
+    <nav class="mt-8 grid gap-4 sm:grid-cols-2">
+      <a href="/blog/posts/2025-08-20-ty-le-pha-espresso.html" class="block rounded-xl border border-stone-200 bg-white p-4 hover:border-brand">
+        <p class="text-xs text-stone-500">Bài trước</p>
+        <p class="font-medium text-stone-900">Tỷ lệ pha Espresso cho máy nhỏ</p>
+      </a>
+      <a href="/blog/posts/2025-08-25-tao-menu-phin-cho-quan.html" class="block rounded-xl border border-stone-200 bg-white p-4 text-right hover:border-brand">
+        <p class="text-xs text-stone-500">Bài tiếp</p>
+        <p class="font-medium text-stone-900">Tạo menu phin hiệu quả cho quán</p>
+      </a>
+    </nav>
+
+    <!-- Related posts -->
+    <section class="mt-10">
+      <h2 class="mb-4 text-lg font-semibold">Bài liên quan</h2>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <a href="/blog/posts/2025-08-12-chon-muc-rang-cho-phin.html" class="group overflow-hidden rounded-xl border border-stone-200 bg-white">
+          <div class="aspect-[16/9] overflow-hidden">
+            <img src="/blog/assets/images/rang-phin.jpg" alt="Mức rang cho phin" class="h-full w-full object-cover transition-transform group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-stone-900">Chọn mức rang cho phin</p>
+            <p class="mt-1 text-sm text-stone-600">Medium–dark cho body đầm, hậu ngọt.</p>
+          </div>
+        </a>
+        <a href="/blog/posts/2025-08-10-nuoc-anh-huong-vi.html" class="group overflow-hidden rounded-xl border border-stone-200 bg-white">
+          <div class="aspect-[16/9] overflow-hidden">
+            <img src="/blog/assets/images/water.jpg" alt="Nước và hương vị" class="h-full w-full object-cover transition-transform group-hover:scale-105">
+          </div>
+          <div class="p-4">
+            <p class="font-medium text-stone-900">Nước ảnh hưởng vị cà phê thế nào?</p>
+            <p class="mt-1 text-sm text-stone-600">Độ cứng, pH, nhiệt độ và cách khử.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-16 border-t border-stone-200 bg-white">
+    <div class="mx-auto max-w-3xl px-4 py-6 text-sm text-stone-600">
+      © 2015–2025 ANARO Coffee. Rang tươi mỗi ngày.
+    </div>
+  </footer>
+</body>
+</html>
