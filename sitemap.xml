@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://anarocafe.vercel.app/</loc><lastmod>2025-08-22T07:48:27.592Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://anarocafe.vercel.app/blog.html</loc><lastmod>2025-08-22T07:48:27.592Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://anarocafe.vercel.app/</loc><lastmod>2025-08-22T17:22:04.764Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://anarocafe.vercel.app/blog.html</loc><lastmod>2025-08-22T17:22:04.764Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://anarocafe.vercel.app/blog/posts/2025-08-23-demo-tailwind.html</loc><lastmod>2025-08-23T00:00:00.000Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://anarocafe.vercel.app/blog/posts/2025-08-22-cach-pha-mot-ly-espresso.html</loc><lastmod>2025-08-22T00:00:00.000Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://anarocafe.vercel.app/blog/posts/2025-08-21-cach-bao-quan-ca-phe-sau-rang.html</loc><lastmod>2025-08-21T00:00:00.000Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://anarocafe.vercel.app/blog/posts/2025-08-21-caffeine-co-loi-cho-nguoi-choi-the-thao-khong-lieu-dung-thoi-diem-rui-ro-va-luat-wada.html</loc><lastmod>2025-08-21T00:00:00.000Z</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
