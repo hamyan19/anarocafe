@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cách pha cà phê phin ngon như quán - Bí quyết từ chuyên gia</title>
+    <style>
+        :root {
+            --primary: #6b3f25;
+            --secondary: #a47148;
+            --bg: #f6efe9;
+            --text: #2a221d;
+            --light: #F8EBDD;
+            --border: #e9d7c5;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+            --focus-ring: 0 0 0 3px rgba(107, 63, 37, 0.3);
+            --accent: #d4a574;
+            --muted: #806a5b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(180deg, #fff, var(--bg) 50%, #f0e2d6);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* =========================
+           ACCESSIBILITY & FOCUS
+           ========================= */
+        
+        *:focus {
+            outline: none;
+            box-shadow: var(--focus-ring);
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 8px 16px;
+            text-decoration: none;
+            z-index: 1000;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        /* =========================
+           HEADER & NAVIGATION
+           ========================= */
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(253, 248, 243, 0.95);
+            backdrop-filter: saturate(180%) blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 0;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--secondary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--border);
+        }
+
+        /* =========================
+           MAIN CONTENT LAYOUT
+           ========================= */
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .article-content {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        /* =========================
+           ARTICLE HEADER
+           ========================= */
+
+        .article-header {
+            padding: 40px 40px 0;
+            background: linear-gradient(135deg, var(--light) 0%, rgba(255,255,255,0.8) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .article-category {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .article-title {
+            font-size: clamp(28px, 5vw, 42px);
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1.2;
+            margin: 0 0 20px 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .article-excerpt {
+            font-size: 18px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reading-time {
+            background: var(--secondary);
+            color: var(--white);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           ARTICLE BODY
+           ========================= */
+
+        .article-body {
+            padding: 40px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .article-body h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 40px 0 20px 0;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .article-body h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .article-body h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--secondary);
+            margin: 32px 0 16px 0;
+        }
+
+        .article-body h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            margin: 24px 0 12px 0;
+        }
+
+        .article-body p {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .article-body ul,
+        .article-body ol {
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        .article-body li {
+            margin-bottom: 8px;
+        }
+
+        .article-body blockquote {
+            background: var(--light);
+            border-left: 5px solid var(--primary);
+            padding: 20px 24px;
+            margin: 30px 0;
+            font-style: italic;
+            font-size: 18px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+
+        .article-body blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* =========================
+           SPECIAL CONTENT BLOCKS
+           ========================= */
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--light) 100%);
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--white);
+            padding: 0 8px;
+            font-size: 20px;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 300px;
+            background: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800') center/cover;
+            border-radius: var(--radius);
+            margin: 30px 0;
+            position: relative;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(107, 63, 37, 0.2);
+            border-radius: var(--radius);
+        }
+
+        .content-image {
+            width: 100%;
+            height: 250px;
+            background: url('https://images.unsplash.com/photo-1497515114629-f71d768fd07c?w=800') center/cover;
+            border-radius: var(--radius);
+            margin: 30px 0;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        /* =========================
+           DROPDOWN & TOC
+           ========================= */
+
+        .toc-section {
+            margin: 30px 0;
+        }
+
+        .dropdown {
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .dropdown-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 16px 20px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-header:hover {
+            background: var(--secondary);
+        }
+
+        .dropdown-header::after {
+            content: '▼';
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.active .dropdown-header::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            display: none;
+            padding: 20px;
+            background: var(--light);
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
+        .toc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toc-item {
+            color: var(--text);
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            display: block;
+        }
+
+        .toc-item:hover {
+            background: var(--white);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        /* =========================
+           TABLES
+           ========================= */
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 16px;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background: var(--light);
+        }
+
+        /* =========================
+           STEP BY STEP GUIDE
+           ========================= */
+
+        .step-guide {
+            display: grid;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .step-item {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 4px 15px var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: var(--primary);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 15px 0 12px 0;
+        }
+
+        .step-description {
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .step-tips {
+            background: var(--light);
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--muted);
+            border-left: 3px solid var(--accent);
+        }
+
+        .step-tips strong {
+            color: var(--primary);
+        }
+
+        /* =========================
+           FAQ SECTION
+           ========================= */
+
+        .faq {
+            background: var(--light);
+            padding: 40px;
+            border-radius: var(--radius);
+            margin: 40px 0;
+            border: 1px solid var(--border);
+        }
+
+        .faq h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            background: var(--primary);
+            color: var(--white);
+            padding: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: var(--secondary);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 20px;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 24px;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* =========================
+           SIDEBAR
+           ========================= */
+
+        .sidebar {
+            position: sticky;
+            top: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .sidebar-widget {
+            background: var(--white);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .widget-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 16px 20px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .widget-content {
+            padding: 20px;
+        }
+
+        .related-posts {
+            background: var(--light);
+            padding: 40px;
+            border-radius: var(--radius);
+            margin: 40px 0;
+            border: 1px solid var(--border);
+        }
+
+        .related-posts h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 30px;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .related-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .related-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .related-item h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .related-item p {
+            color: var(--muted);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+           ========================= */
+
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 16px;
+            }
+
+            .main-container {
+                padding: 20px 16px;
+            }
+
+            .article-header,
+            .article-body {
+                padding: 24px 20px;
+            }
+
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-excerpt {
+                font-size: 16px;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* =========================
+           SMOOTH SCROLLING
+           ========================= */
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Bỏ qua đến nội dung chính</a>
+    
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                ☕ Coffee Expert
+            </a>
+            <nav class="breadcrumb">
+                <a href="#">Trang chủ</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="#">Hướng dẫn</a>
+                <span class="breadcrumb-separator">›</span>
+                <span>Pha cà phê phin</span>
+            </nav>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <article class="article-content" id="main-content">
+            <header class="article-header">
+                <div class="article-category">Hướng dẫn</div>
+                <h1 class="article-title">Cách Pha Cà Phê Phin Ngon Như Quán</h1>
+                <p class="article-excerpt">
+                    Khám phá bí quyết pha cà phê phin đúng chuẩn với tỷ lệ hoàn hảo, từ cách chọn cà phê đến kỹ thuật pha chế để có được ly cà phê đậm đà, thơm ngon như ngoài quán.
+                </p>
+                <div class="article-meta">
+                    <div class="meta-item">
+                        <span>📅</span>
+                        <span>23 Tháng 8, 2025</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>👤</span>
+                        <span>Coffee Expert</span>
+                    </div>
+                    <div class="reading-time">⏱ 10 phút đọc</div>
+                </div>
+            </header>
+
+            <div class="article-body">
+                <div class="hero-image"></div>
+
+                <!-- Table of Contents -->
+                <div class="toc-section">
+                    <div class="dropdown">
+                        <div class="dropdown-header" onclick="toggleDropdown(this)">
+                            📋 Mục Lục Bài Viết
+                        </div>
+                        <div class="dropdown-content">
+                            <div class="toc-list">
+                                <a href="#introduction" class="toc-item">1. Giới Thiệu Về Cà Phê Phin</a>
+                                <a href="#preparation" class="toc-item">2. Chuẩn Bị Nguyên Liệu và Dụng Cụ</a>
+                                <a href="#ratio" class="toc-item">3. Tỷ Lệ Cà Phê và Nước Chuẩn</a>
+                                <a href="#step-by-step" class="toc-item">4. Cách Pha Từng Bước Chi Tiết</a>
+                                <a href="#tips" class="toc-item">5. Bí Quyết Để Có Ly Cà Phê Ngon</a>
+                                <a href="#mistakes" class="toc-item">6. Những Lỗi Thường Gặp</a>
+                                <a href="#faq-section" class="toc-item">7. Câu Hỏi Thường Gặp</a>
+                                <a href="#conclusion" class="toc-item">8. Kết Luận</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 id="introduction">Giới Thiệu Về Cà Phê Phin</h2>
+                <p>Cà phê phin là phương pháp pha chế truyền thống của Việt Nam, được yêu thích bởi hương vị đậm đà, thơm ngon đặc trưng. Khác với các phương pháp pha cà phê hiện đại, cà phê phin tạo ra những giọt cà phê chậm rãi, từ từ chiết xuất tinh túy từ từng hạt cà phê.</p>
+
+                <p>Phin cà phê thường được làm từ nhôm hoặc inox, gồm 4 bộ phận chính: thân phin, nắp đậy, tấm lọc có lỗ và ấn phin. Thiết kế đơn giản này đã tồn tại hơn 150 năm và vẫn là cách pha cà phê được ưa chuộng nhất tại Việt Nam.</p>
+
+                <div class="highlight-box">
+                    <h4>Vì Sao Nên Chọn Cà Phê Phin?</h4>
+                    <ul>
+                        <li><strong>Hương vị đậm đà:</strong> Thời gian pha chậm giúp chiết xuất tối đa hương vị từ cà phê</li>
+                        <li><strong>Dễ thực hiện:</strong> Không cần máy móc phức tạp, ai cũng có thể làm được</li>
+                        <li><strong>Tiết kiệm:</strong> Chi phí đầu tư thấp, bền lâu</li>
+                        <li><strong>Truyền thống:</strong> Nét văn hóa đặc trưng của người Việt</li>
+                    </ul>
+                </div>
+
+                <h2 id="preparation">Chuẩn Bị Nguyên Liệu và Dụng Cụ</h2>
+                <p>Để pha được một ly cà phê phin ngon, việc chuẩn bị nguyên liệu và dụng cụ đúng cách là yếu tố quyết định đầu tiên. Chất lượng cà phê, độ xay, nhiệt độ nước đều ảnh hưởng trực tiếp đến hương vị cuối cùng.</p>
+
+                <h3>Nguyên Liệu Cần Chuẩn Bị:</h3>
+                <ul>
+                    <li><strong>Cà phê:</strong> 20-25g cà phê xay vừa (cho phin nhỏ)</li>
+                    <li><strong>Nước:</strong> 70-90ml nước sôi (nhiệt độ 90-95°C)</li>
+                    <li><strong>Đường/Sữa:</strong> Tùy theo sở thích cá nhân</li>
+                </ul>
+
+                <h3>Dụng Cụ:</h3>
+                <ul>
+                    <li>Phin cà phê (đường kính 6-8cm)</li>
+                    <li>Ly thủy tinh hoặc sứ</li>
+                    <li>Ấm đun nước</li>
+                    <li>Thìa khuấy</li>
+                </ul>
+
+                <div class="content-image"></div>
+
+                <h2 id="ratio">Tỷ Lệ Cà Phê và Nước Chuẩn</h2>
+                <p>Tỷ lệ cà phê và nước phổ biến là 1 phần cà phê và 3.5 phần nước. Tuy nhiên, bạn có thể điều chỉnh tùy theo sở thích cá nhân và loại cà phê sử dụng.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Loại Phin</th>
+                            <th>Lượng Cà Phê</th>
+                            <th>Lượng Nước</th>
+                            <th>Thời Gian Pha</th>
+                            <th>Độ Đậm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Phin nhỏ (1 ly)</td>
+                            <td>20-25g</td>
+                            <td>70-90ml</td>
+                            <td>5-7 phút</td>
+                            <td>Đậm đà</td>
+                        </tr>
+                        <tr>
+                            <td>Phin lớn (2-3 ly)</td>
+                            <td>40-50g</td>
+                            <td>150-200ml</td>
+                            <td>8-12 phút</td>
+                            <td>Vừa phải</td>
+                        </tr>
+                        <tr>
+                            <td>Cà phê nhạt</td>
+                            <td>15-18g</td>
+                            <td>80-100ml</td>
+                            <td>4-6 phút</td>
+                            <td>Nhẹ</td>
+                        </tr>
+                        <tr>
+                            <td>Cà phê
