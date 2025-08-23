@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pha cà phê phin A–Z: Công thức, tỷ lệ, chẩn đoán lỗi | ANARO Coffee</title>
+  <meta name="description" content="Hướng dẫn pha cà phê phin A–Z dành cho người mới: tỷ lệ chuẩn, nhiệt độ nước, kỹ thuật nén, thời gian nhỏ giọt và cách chẩn đoán 5 lỗi phổ biến. Có bảng công thức và FAQ.">
+  <link rel="canonical" href="https://anarocafe.vercel.app/blog/posts/2025-08-23-pha-phin-a-z.html">
+  <link rel="stylesheet" href="/blog/assets/css/post.css">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"BreadcrumbList",
+    "itemListElement":[
+      {"@type":"ListItem","position":1,"name":"Trang chủ","item":"https://anarocafe.vercel.app/"},
+      {"@type":"ListItem","position":2,"name":"Blog","item":"https://anarocafe.vercel.app/blog/"},
+      {"@type":"ListItem","position":3,"name":"Pha cà phê phin A–Z","item":"https://anarocafe.vercel.app/blog/posts/2025-08-23-pha-phin-a-z.html"}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "Pha cà phê phin A–Z",
+    "description": "Quy trình chi tiết để pha cà phê phin tại nhà: tỷ lệ, nhiệt độ, thời gian nhỏ giọt và cách xử lý lỗi.",
+    "totalTime": "PT7M",
+    "estimatedCost": {"@type":"MonetaryAmount","currency":"VND","value":"N/A"},
+    "yield": "1 ly cô đặc 65–85 ml (đủ cho đen nóng hoặc sữa đá)",
+    "supply": [
+      {"@type":"HowToSupply","name":"Cà phê xay cỡ phin (15–25 g)"},
+      {"@type":"HowToSupply","name":"Nước nóng 92–94°C (80–140 ml)"},
+      {"@type":"HowToSupply","name":"Sữa đặc (tuỳ chọn)"},
+      {"@type":"HowToSupply","name":"Đá viên (tuỳ chọn)"}
+    ],
+    "tool": [
+      {"@type":"HowToTool","name":"Phin (nhôm hoặc inox)"},
+      {"@type":"HowToTool","name":"Ấm/kettle"},
+      {"@type":"HowToTool","name":"Cân và đồng hồ bấm giờ"},
+      {"@type":"HowToTool","name":"Ly thuỷ tinh"}
+    ],
+    "step": [
+      {"@type":"HowToStep","name":"Chuẩn bị và làm ấm","text":"Tráng phin và ly bằng nước nóng để ổn định nhiệt."},
+      {"@type":"HowToStep","name":"Cho bột và cân chỉnh","text":"Thêm 15–25 g bột, lắc nhẹ cho phẳng mặt, đặt lưới nén nặng vừa tay."},
+      {"@type":"HowToStep","name":"Bloom (ủ nở)","text":"Rót 25–40 ml nước 92–94°C, chờ 45–60 giây để thoát khí CO₂."},
+      {"@type":"HowToStep","name":"Rót chính","text":"Rót phần nước còn lại theo 2–3 đợt, tổng 80–140 ml tuỳ cỡ phin và gu đậm nhạt."},
+      {"@type":"HowToStep","name":"Chờ nhỏ giọt","text":"Tổng thời gian 4–6 phút kể từ khi bắt đầu nhỏ giọt. Dừng khi tốc độ chậm và vị vừa ý."},
+      {"@type":"HowToStep","name":"Hoàn thiện","text":"Uống đen hoặc thêm sữa đặc/đá. Khuấy đều trước khi dùng."}
+    ],
+    "image": [
+      "https://anarocafe.vercel.app/blog/assets/images/pha-phin-a-z.webp"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+<!-- META-START
+title: "Pha cà phê phin A–Z: Công thức, tỷ lệ, chẩn đoán lỗi"
+description: "Hướng dẫn pha cà phê phin dành cho người mới: tỷ lệ, nhiệt độ, kỹ thuật nén, thời gian và cách sửa 5 lỗi phổ biến. Có bảng công thức + FAQ."
+tags: ["ca-phe-phin","brew","homebrew","ty-le-pha","loi-thuong-gap"]
+date: "2025-08-23"
+cover: "/blog/assets/images/pha-phin-a-z.webp"
+author: "ANARO Coffee"
+META-END -->
+
+<main class="post">
+  <article>
+    <header class="post-header">
+      <h1>Pha cà phê phin A–Z: Công thức, tỷ lệ, chẩn đoán lỗi</h1>
+      <p class="tldr"><strong>TL;DR:</strong> Dùng 15–25 g bột, nước 92–94°C tổng 80–140 ml. Bloom 45–60 giây, tổng thời gian nhỏ giọt 4–6 phút. Nén vừa tay, bột xay mịn hơn pour-over. Nếu chảy quá nhanh → tăng độ mịn/nén hơn; quá chậm → thô hơn/giảm nén.</p>
+    </header>
+
+    <figure class="post-cover">
+      <img src="/blog/assets/images/pha-phin-a-z.webp" alt="Pha cà phê phin tại nhà" width="1200" height="675" loading="lazy">
+      <figcaption>Phin inox size M, bột xay cỡ phin, nước 92–94°C.</figcaption>
+    </figure>
+
+    <h2>Dụng cụ & nguyên liệu</h2>
+    <ul>
+      <li>Phin nhôm/inox size M hoặc L</li>
+      <li>Cà phê rang mộc: <a href="/product/arabica-da-lat">Arabica Đà Lạt</a>, <a href="/product/robusta-moc">Robusta mộc</a>, <a href="/product/blend-50-50">Blend 50/50</a></li>
+      <li>Nước 92–94°C; cân; đồng hồ/timer; ly thuỷ tinh</li>
+      <li>Tùy chọn: sữa đặc, đá viên</li>
+    </ul>
+
+    <h2>Bảng tỷ lệ gợi ý</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Mục đích</th>
+            <th>Bột (g)</th>
+            <th>Nước tổng (ml)</th>
+            <th>Bloom (ml)</th>
+            <th>Thời gian (phút)</th>
+            <th>Nén</th>
+            <th>Gợi ý hạt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Đen nóng đậm</td>
+            <td>15–18</td>
+            <td>80–110</td>
+            <td>25–30</td>
+            <td>4–5</td>
+            <td>Vừa</td>
+            <td>Robusta mộc / 50–50</td>
+          </tr>
+          <tr>
+            <td>Sữa đá cân bằng</td>
+            <td>22–25</td>
+            <td>110–140</td>
+            <td>30–40</td>
+            <td>5–6</td>
+            <td>Vừa–hơi chặt</td>
+            <td>50–50 / 70–30</td>
+          </tr>
+          <tr>
+            <td>Thơm nhẹ ít đắng</td>
+            <td>15–18</td>
+            <td>100–130</td>
+            <td>25–30</td>
+            <td>4–5</td>
+            <td>Nhẹ</td>
+            <td>Arabica Đà Lạt</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Quy trình chi tiết</h2>
+    <ol>
+      <li><strong>Làm ấm phin & ly:</strong> Tráng nước nóng để ổn định nhiệt.</li>
+      <li><strong>Cho bột & nén nhẹ:</strong> Lắc phẳng, đặt lưới nén, ấn <em>vừa tay</em> để bột không bị nén quá chặt.</li>
+      <li><strong>Bloom 45–60 giây:</strong> Rót 25–40 ml, bề mặt ẩm đều, dừng để thoát khí.</li>
+      <li><strong>Rót chính 2–3 đợt:</strong> Rót vòng tròn nhỏ, giữ mực nước ổn định, không đổ dồn một lần.</li>
+      <li><strong>Thời gian:</strong> 4–6 phút là dải tối ưu. Lệch nhiều → xem phần chẩn đoán.</li>
+      <li><strong>Hoàn thiện:</strong> Đen nóng hoặc thêm sữa/đá theo gu.</li>
+    </ol>
+
+    <section class="cta">
+      <p><strong>CTA:</strong> Thử ngay <a href="/product/blend-50-50">Blend 50/50 cho phin</a> hoặc <a href="/product/sample-4x60g">Sample 4 vị</a>. Giao nhanh, rang mới.</p>
+    </section>
+
+    <h2>Chẩn đoán & sửa 5 lỗi phổ biến</h2>
+    <details>
+      <summary>Phin chảy quá nhanh</summary>
+      <ul>
+        <li><strong>Nguyên nhân:</strong> Bột quá thô; nén quá nhẹ; lượng bột ít.</li>
+        <li><strong>Khắc phục:</strong> Xay mịn hơn 1–2 nấc; nén chắc hơn; tăng bột +10–15%.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Phin chảy quá chậm/không chảy</summary>
+      <ul>
+        <li><strong>Nguyên nhân:</strong> Bột quá mịn; nén quá chặt; lưới tắc.</li>
+        <li><strong>Khắc phục:</strong> Xay thô hơn; giảm lực nén; vệ sinh lưới.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Vị chua gắt</summary>
+      <ul>
+        <li><strong>Nguyên nhân:</strong> Nước quá nguội; thời gian quá ngắn; rang nhạt.</li>
+        <li><strong>Khắc phục:</strong> Dùng 92–94°C; kéo dài 30–45 giây; chọn hạt rang medium.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Vị đắng gắt, chát</summary>
+      <ul>
+        <li><strong>Nguyên nhân:</strong> Quá nhiệt; quá lâu; bột quá mịn.</li>
+        <li><strong>Khắc phục:</strong> Giữ 92–94°C; dừng ở 4–6 phút; xay thô hơn.</li>
+      </ul>
+    </details>
+    <details>
+      <summary>Ít hương, thân mỏng</summary>
+      <ul>
+        <li><strong>Nguyên nhân:</strong> Hạt cũ/bảo quản sai; tỷ lệ nước cao.</li>
+        <li><strong>Khắc phục:</strong> Dùng hạt rang mới 7–14 ngày; giảm nước 10–20 ml.</li>
+      </ul>
+    </details>
+
+    <h2>FAQ (ngắn gọn)</h2>
+    <div class="faq" itemscope itemtype="https://schema.org/FAQPage">
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Nước bao nhiêu độ là hợp lý?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">92–94°C cho đa số công thức phin.</p>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Có nên nén thật chặt?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">Không. Nén vừa tay để nước thấm đều, tránh tắc dòng.</p>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Dải thời gian nhỏ giọt bao lâu?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">4–6 phút kể từ khi bắt đầu nhỏ giọt.</p>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Có nên cho hạt vào tủ lạnh?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">Không khuyến nghị. Dễ ngưng tụ ẩm. Tốt hơn là túi zip van 1 chiều; có thể <em>freeze</em> đúng cách.</p>
+        </div>
+      </div>
+      <div itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+        <h3 itemprop="name">Hạt nào hợp phin sữa đá?</h3>
+        <div itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+          <p itemprop="text">Blend 50/50 hoặc Robusta mộc cho thân đậm và hậu vị rõ.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="related">
+      <h2>Bài liên quan</h2>
+      <ul>
+        <li><a href="/blog/posts/2025-08-27-cold-brew-12-18-24h.html">Cold brew tại nhà: 12–18–24h</a></li>
+        <li><a href="/blog/posts/2025-08-29-3-loi-phin-chay-nhanh.html">3 lỗi làm phin chảy nhanh</a></li>
+        <li><a href="/blog/posts/2025-09-01-arabica-vs-robusta.html">Arabica vs Robusta cho người Việt</a></li>
+      </ul>
+    </section>
+
+    <footer class="post-footer">
+      <p>© ANARO Coffee — Xưởng rang tại Việt Nam. Rang mộc, minh bạch ngày rang.</p>
+    </footer>
+  </article>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {"@type":"Question","name":"Nước bao nhiêu độ là hợp lý?","acceptedAnswer":{"@type":"Answer","text":"92–94°C cho đa số công thức phin."}},
+    {"@type":"Question","name":"Có nên nén thật chặt?","acceptedAnswer":{"@type":"Answer","text":"Không. Nén vừa tay để nước thấm đều, tránh tắc dòng."}},
+    {"@type":"Question","name":"Dải thời gian nhỏ giọt bao lâu?","acceptedAnswer":{"@type":"Answer","text":"4–6 phút kể từ khi bắt đầu nhỏ giọt."}},
+    {"@type":"Question","name":"Có nên cho hạt vào tủ lạnh?","acceptedAnswer":{"@type":"Answer","text":"Không khuyến nghị. Dễ ngưng tụ ẩm. Tốt hơn là túi zip van 1 chiều; có thể freeze đúng cách."}},
+    {"@type":"Question","name":"Hạt nào hợp phin sữa đá?","acceptedAnswer":{"@type":"Answer","text":"Blend 50/50 hoặc Robusta mộc cho thân đậm và hậu vị rõ."}}
+  ]
+}
+</script>
+
+</body>
+</html>
