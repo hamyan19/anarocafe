@@ -1,207 +1,304 @@
-const fs = require('fs-extra');
-const path = require('path');
+// scripts/generate-blog.js
+const fs = require("fs-extra");
+const path = require("path");
+const cheerio = require("cheerio");
 
-const SITE = 'https://anarocafe.vercel.app';
-const PAGE_SIZE = 12; // đổi nếu muốn
+const ROOT = process.cwd();
+const POSTS_DIR = path.join(ROOT, "blog", "posts");
+const TPL_FILE = path.join(ROOT, "blog", "templates", "blog.html");
+const OUT_BLOG = path.join(ROOT, "blog.html");
+const OUT_RSS = path.join(ROOT, "rss.xml");
+const OUT_SITEMAP = path.join(ROOT, "sitemap.xml");
 
-class BlogGenerator {
-  constructor(){
-    this.root = path.join(__dirname, '..');
-    this.postsDir = path.join(this.root, 'blog', 'posts');
-    this.templatesDir = path.join(this.root, 'blog', 'templates');
-    this.outputIndex = path.join(this.root, 'blog.html'); // trang 1
-  }
+const SITE_ORIGIN = "https://anarocafe.vercel.app"; // update nếu cần
+const DEFAULT_COVER = "/blog/assets/images/default.jpg";
 
-  formatDate(d){
-    return new Date(d).toLocaleDateString('vi-VN',{year:'numeric',month:'2-digit',day:'2-digit'});
-  }
+function safeRead(file) {
+  try { return fs.readFileSync(file, "utf8"); } catch { return ""; }
+}
 
-  rfc822(d){
-    return new Date(d).toUTCString(); // cho RSS
-  }
+function trim160(s) {
+  if (!s) return "";
+  s = s.replace(/\s+/g, " ").trim();
+  return s.length > 160 ? s.slice(0, 157) + "…" : s;
+}
 
-  slugify(s){
-    return (s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-      .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-  }
+function toSlugFromFile(p) {
+  const base = path.basename(p, ".html");
+  return base;
+}
 
-  toCover(p){
-    if(!p) return '/blog/assets/images/default.jpg';
-    if(/^https?:\/\//i.test(p)) return p;
-    let s=p.replace(/^\.?\//,'').replace(/^blog\//,'');
-    if(!s.startsWith('blog/assets/')) s='blog/assets/'+s.replace(/^assets\//,'');
-    return '/'+s;
-  }
-
-  extractMeta(file, html){
-    const m = html.match(/<!--\s*META-START([\s\S]*?)META-END\s*-->/);
-    const meta = { title:'Untitled Post', description:'', tags:[], date:'', cover:'/blog/assets/images/default.jpg', author:'ANARO Coffee' };
-    if(m){
-      for(const raw of m[1].split('\n')){
-        const line = raw.trim(); if(!line) continue;
-        const kv = line.match(/^(\w+)\s*:\s*(.+)$/); if(!kv) continue;
-        const key = kv[1]; let val = kv[2].trim();
-        if(key==='tags'){
-          try { meta.tags = JSON.parse(val.replace(/'/g,'"')); }
-          catch { meta.tags = val.split(',').map(s=>s.trim()).filter(Boolean); }
-        } else {
-          meta[key] = val.replace(/^"(.*)"$/,'$1');
-        }
-      }
+function detectDate(text, fallbackStat) {
+  // ưu tiên: trong nội dung (YYYY-MM-DD | DD/MM/YYYY | DD-MM-YYYY)
+  const patterns = [
+    /\b(\d{4})-(\d{2})-(\d{2})\b/,                 // 2025-01-15
+    /\b(\d{2})\/(\d{2})\/(\d{4})\b/,               // 15/01/2025
+    /\b(\d{2})-(\d{2})-(\d{4})\b/                  // 15-01-2025
+  ];
+  for (const re of patterns) {
+    const m = text.match(re);
+    if (m) {
+      if (re === patterns[0]) return `${m[1]}-${m[2]}-${m[3]}`;
+      if (re === patterns[1]) return `${m[3]}-${m[2]}-${m[1]}`;
+      if (re === patterns[2]) return `${m[3]}-${m[2]}-${m[1]}`;
     }
-    if(!meta.date){
-      const d = file.match(/^(\d{4}-\d{2}-\d{2})/);
-      if(d) meta.date = d[1];
+  }
+  // fallback: tên file dạng YYYY-MM-DD-xxx.html
+  const m2 = text.match(/\b(20\d{2}|19\d{2})-(\d{2})-(\d{2})/);
+  if (m2) return `${m2[1]}-${m2[2]}-${m2[3]}`;
+  // fallback cuối: mtime
+  if (fallbackStat) {
+    const d = new Date(fallbackStat.mtime);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  }
+  // hôm nay
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function normalizeTag(t) {
+  return t
+    .toLowerCase()
+    .trim()
+    .replace(/^#/, "")
+    .replace(/\s+/g, "-")
+    .replace(/[^\p{L}\p{N}-]+/gu, "");
+}
+
+function uniq(arr) {
+  return [...new Set(arr.filter(Boolean))];
+}
+
+function extractFromMetaBlock(html) {
+  // khối <!-- META-START ... META-END -->
+  const m = html.match(/<!--\s*META-START([\s\S]*?)META-END\s*-->/i);
+  if (!m) return {};
+  const block = m[1];
+
+  const read = (key) => {
+    const re = new RegExp(`${key}\\s*:\\s*"(.*?)"`, "i");
+    const mm = block.match(re);
+    return mm ? mm[1].trim() : undefined;
+  };
+
+  // tags dạng ["a","b"] hoặc chuỗi
+  let tags;
+  const tagsArray = block.match(/tags\s*:\s*\[([\s\S]*?)\]/i);
+  if (tagsArray) {
+    tags = tagsArray[1]
+      .split(",")
+      .map(s => s.replace(/["'\s]/g, ""))
+      .map(normalizeTag)
+      .filter(Boolean);
+  } else {
+    const line = read("tags");
+    if (line) {
+      tags = line.split(",").map(normalizeTag);
     }
-    meta.cover = this.toCover(meta.cover);
-    meta.tagsDisplay = (meta.tags||[]).map(t=>t.trim()).filter(Boolean);
-    meta.tagsData = meta.tagsDisplay.map(t=>this.slugify(t));
-    return meta;
   }
 
-  async readPosts(){
-    await fs.ensureDir(this.postsDir);
-    const files = (await fs.readdir(this.postsDir)).filter(f=>f.endsWith('.html'));
-    const posts = [];
-    for(const file of files){
-      const html = await fs.readFile(path.join(this.postsDir,file),'utf8');
-      const meta = this.extractMeta(file, html);
-      posts.push({
-        filename:file,
-        url:`/blog/posts/${file}`,
-        title:meta.title,
-        description:meta.description,
-        cover:meta.cover,
-        date:meta.date || new Date().toISOString().slice(0,10),
-        author:meta.author || 'ANARO Coffee',
-        tagsDisplay:meta.tagsDisplay,
-        tagsData:meta.tagsData
-      });
-    }
-    posts.sort((a,b)=>new Date(b.date)-new Date(a.date));
-    return posts;
+  return {
+    title: read("title"),
+    description: read("description"),
+    date: read("date"),
+    cover: read("cover"),
+    author: read("author"),
+    tags
+  };
+}
+
+function extractFallback($, html, fileText, stat) {
+  // title
+  let title = $("h1").first().text().trim();
+  if (!title) {
+    // lấy dòng đầu (plain text)
+    const firstLine = (fileText.split(/\r?\n/).find(l => l.trim()) || "").trim();
+    title = firstLine.replace(/^#+\s*/, "").trim();
+  }
+  if (!title) title = path.basename(stat?.filePath || "bai-viet", ".html");
+
+  // description: thẻ meta description hoặc đoạn p đầu
+  let desc = $('meta[name="description"]').attr("content");
+  if (!desc) {
+    desc = $("p").first().text().trim() || $("article p").first().text().trim();
+  }
+  desc = trim160(desc || "");
+
+  // cover: ảnh đầu tiên, hoặc dòng Cover: https..., hoặc default
+  let cover =
+    $("img").first().attr("src") ||
+    (html.match(/Cover\s*:\s*(https?:\/\/\S+|\S+\.jpg|\S+\.png)/i)?.[1]) ||
+    DEFAULT_COVER;
+
+  // tags: dòng “Tags:” / “Từ khóa:”, hashtag, rel=tag, class chứa "tag"
+  let tags = [];
+  const tagLine = html.match(/(?:Tags|Từ khóa)\s*:\s*([^\n\r<]+)/i)?.[1];
+  if (tagLine) {
+    tags.push(...tagLine.split(",").map(normalizeTag));
+  }
+  // hashtag
+  const hashMatches = [...(fileText.matchAll(/#([\p{L}\p{N}-]{2,})/gu))].map(m => normalizeTag(m[1]));
+  tags.push(...hashMatches);
+
+  // rel="tag" / class *tag*
+  $('a[rel="tag"]').each((_, el) => tags.push(normalizeTag($(el).text())));
+  $('[class*="tag"]').each((_, el) => {
+    const t = $(el).text().trim();
+    if (t && t.length < 40) tags.push(normalizeTag(t));
+  });
+  tags = uniq(tags);
+
+  // date
+  const plain = $.text();
+  const date = detectDate(`${html}\n${plain}\n${stat?.filePath || ""}`, stat);
+
+  return { title, description: desc, cover, tags, date };
+}
+
+function loadPosts() {
+  if (!fs.existsSync(POSTS_DIR)) return [];
+  const files = fs.readdirSync(POSTS_DIR).filter(f => f.endsWith(".html"));
+  const posts = [];
+
+  for (const fname of files) {
+    const fpath = path.join(POSTS_DIR, fname);
+    const html = safeRead(fpath);
+    if (!html.trim()) continue;
+
+    const stat = fs.statSync(fpath);
+    const $ = cheerio.load(html);
+
+    // meta block (nếu có)
+    const meta = extractFromMetaBlock(html);
+
+    // fallback trích tự động
+    const autoMeta = extractFallback($, html, html, { ...stat, filePath: fpath });
+
+    const title = meta.title || autoMeta.title;
+    const description = meta.description || autoMeta.description;
+    const date = meta.date || autoMeta.date;
+    const cover = meta.cover || autoMeta.cover;
+    const tags = (meta.tags && meta.tags.length ? meta.tags : autoMeta.tags) || [];
+    const url = `/blog/posts/${fname}`;
+
+    posts.push({
+      title,
+      description,
+      date,
+      cover,
+      tags,
+      url,
+      file: fpath
+    });
   }
 
-  postCard(p, aboveFold=false){
-    // ảnh tối ưu lazy-load
-    const imgAttrs = aboveFold
-      ? `loading="eager" fetchpriority="high"`
-      : `loading="lazy" decoding="async" fetchpriority="low"`;
-    return `
-<article class="post-card" data-tags="${p.tagsData.join(',')}">
+  // sort desc by date
+  posts.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return posts;
+}
+
+function renderTagsFilter(allTags) {
+  if (!allTags.length) return "";
+  allTags.sort();
+  return allTags
+    .map(t => `<button class="tag-filter" data-tag="${t}">${t}</button>`)
+    .join("\n");
+}
+
+function renderPostCard(p) {
+  const tagsHtml = (p.tags || [])
+    .slice(0, 6)
+    .map(t => `<span class="post-tag">#${t}</span>`)
+    .join("");
+  const dataTags = (p.tags || []).join(",");
+  const alt = p.title.replace(/"/g, "&quot;");
+  return `
+<article class="post-card" data-tags="${dataTags}">
   <div class="post-image">
-    <img src="${p.cover}" alt="${p.title}" width="1200" height="675" ${imgAttrs}>
+    <a href="${p.url}"><img src="${p.cover}" alt="${alt}" loading="lazy"></a>
   </div>
   <div class="post-content">
-    <h2 class="post-title"><a href="${p.url}">${p.title}</a></h2>
-    <p class="post-excerpt">${p.description}</p>
-    <div class="post-tags">
-      ${p.tagsDisplay.map((t,i)=>`<span class="post-tag" data-tag="${p.tagsData[i]}">${t}</span>`).join('')}
-    </div>
+    <h3 class="post-title"><a href="${p.url}">${p.title}</a></h3>
+    <p class="post-excerpt">${p.description || ""}</p>
+    <div class="post-tags">${tagsHtml}</div>
   </div>
 </article>`.trim();
-  }
+}
 
-  paginationHtml(page, total){
-    if(total<=1) return '';
-    const items=[];
-    const link = (p, label, active=false, rel='')=>{
-      const href = p===1 ? '/blog.html' : `/blog/page/${p}/`;
-      return `<a class="page${active?' active':''}" href="${href}" ${rel?`rel="${rel}"`:''}>${label}</a>`;
-    };
-    if(page>1) items.push(link(page-1,'‹ Trước',false,'prev'));
-    for(let i=1;i<=total;i++) items.push(link(i,String(i), i===page));
-    if(page<total) items.push(link(page+1,'Sau ›',false,'next'));
-    return `<nav class="pagination">${items.join(' ')}</nav>`;
-  }
-
-  async generateIndexPages(posts){
-    const tpl = await fs.readFile(path.join(this.templatesDir,'blog-index.html'),'utf8');
-    const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
-
-    for(let page=1; page<=totalPages; page++){
-      const start = (page-1)*PAGE_SIZE;
-      const slice = posts.slice(start, start+PAGE_SIZE);
-      const cards = slice.map((p,i)=>this.postCard(p, page===1 && i<1)).join('\n');
-
-      const tagsMap = new Map();
-      slice.forEach(p=>p.tagsData.forEach((slug,i)=>{ if(!tagsMap.has(slug)) tagsMap.set(slug, p.tagsDisplay[i]); }));
-      const tagsFilter = [...tagsMap.entries()].map(([slug,txt])=>`<button class="tag-filter" data-tag="${slug}">${txt}</button>`).join('');
-
-      const lastUpdate = new Date().toLocaleString('vi-VN',{ timeZone:'Asia/Ho_Chi_Minh' });
-
-      const html = tpl
-        .replace('{{POSTS}}', cards)
-        .replace('{{TAGS_FILTER}}', tagsFilter)
-        .replace('{{POSTS_COUNT}}', String(posts.length))
-        .replace('{{LAST_UPDATE}}', lastUpdate)
-        .replace('{{PAGINATION}}', this.paginationHtml(page, totalPages));
-
-      if(page===1){
-        await fs.writeFile(this.outputIndex, html, 'utf8');
-      }else{
-        const dir = path.join(this.root, 'blog', 'page', String(page));
-        await fs.ensureDir(dir);
-        await fs.writeFile(path.join(dir, 'index.html'), html, 'utf8');
-      }
-    }
-    console.log(`✅ Generated index pages: ${Math.max(1, Math.ceil(posts.length/PAGE_SIZE))}`);
-  }
-
-  async generateSitemap(posts){
-    const urls=[];
-    // homepage + blog
-    urls.push({loc:`${SITE}/`, lastmod:new Date().toISOString()});
-    urls.push({loc:`${SITE}/blog.html`, lastmod:new Date().toISOString()});
-    // blog pagination
-    const totalPages = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
-    for(let p=2;p<=totalPages;p++){
-      urls.push({loc:`${SITE}/blog/page/${p}/`, lastmod:new Date().toISOString()});
-    }
-    // posts
-    posts.forEach(p=>{
-      urls.push({loc:`${SITE}${p.url}`, lastmod:new Date(p.date).toISOString()});
-    });
-
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(u=>`  <url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>`).join('\n')}
-</urlset>`;
-    await fs.writeFile(path.join(this.root,'sitemap.xml'), xml, 'utf8');
-    console.log('✅ Generated sitemap.xml');
-  }
-
-  async generateRSS(posts){
-    const items = posts.slice(0, 50).map(p=>`
+function buildRSS(posts) {
+  const items = posts.map(p => `
   <item>
     <title><![CDATA[${p.title}]]></title>
-    <link>${SITE}${p.url}</link>
-    <guid>${SITE}${p.url}</guid>
-    <pubDate>${this.rfc822(p.date)}</pubDate>
-    <description><![CDATA[${p.description}]]></description>
-  </item>`).join('\n');
+    <link>${SITE_ORIGIN}${p.url}</link>
+    <guid>${SITE_ORIGIN}${p.url}</guid>
+    <pubDate>${new Date(p.date).toUTCString()}</pubDate>
+    <description><![CDATA[${p.description || ""}]]></description>
+  </item>`).join("\n");
 
-    const rss = `<?xml version="1.0" encoding="UTF-8"?>
+  return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
 <channel>
   <title>ANARO Coffee Blog</title>
-  <link>${SITE}/blog.html</link>
-  <description>Cà phê, pha chế, kinh doanh quán.</description>
-  <language>vi</language>
-  <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+  <link>${SITE_ORIGIN}/blog.html</link>
+  <description>Blog về cà phê, pha chế và kinh doanh quán.</description>
 ${items}
 </channel>
 </rss>`;
-    await fs.writeFile(path.join(this.root,'rss.xml'), rss, 'utf8');
-    console.log('✅ Generated rss.xml');
-  }
-
-  async run(){
-    const posts = await this.readPosts();
-    await this.generateIndexPages(posts);
-    await this.generateSitemap(posts);
-    await this.generateRSS(posts);
-  }
 }
 
-new BlogGenerator().run().catch(e=>{ console.error(e); process.exit(1); });
+function buildSitemap(posts) {
+  const urls = [
+    `${SITE_ORIGIN}/`,
+    `${SITE_ORIGIN}/blog.html`
+  ].concat(posts.map(p => `${SITE_ORIGIN}${p.url}`));
+
+  const urlset = urls.map(u => `
+  <url>
+    <loc>${u}</loc>
+  </url>`).join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urlset}
+</urlset>`;
+}
+
+(async () => {
+  // đọc template (hoặc fallback blog.html hiện có)
+  let tpl = safeRead(TPL_FILE);
+  if (!tpl.trim()) tpl = safeRead(path.join(ROOT, "blog.html"));
+  if (!tpl.trim()) {
+    console.error("Không tìm thấy template blog.html");
+    process.exit(1);
+  }
+
+  const posts = loadPosts();
+
+  // tổng hợp tags
+  const allTags = uniq(posts.flatMap(p => p.tags || []));
+
+  // render
+  const postsHTML = posts.map(renderPostCard).join("\n");
+  const tagsHTML = renderTagsFilter(allTags);
+  const lastUpdate = new Date();
+  const lastStr = `${lastUpdate.getFullYear()}-${String(lastUpdate.getMonth()+1).padStart(2,"0")}-${String(lastUpdate.getDate()).padStart(2,"0")}`;
+
+  let out = tpl
+    .replace("{{POSTS}}", postsHTML)
+    .replace("{{TAGS_FILTER}}", tagsHTML)
+    .replace("{{POSTS_COUNT}}", String(posts.length))
+    .replace("{{LAST_UPDATE}}", lastStr)
+    .replace("{{PAGINATION}}", ""); // (giữ trống nếu chưa cần phân trang tĩnh)
+
+  await fs.writeFile(OUT_BLOG, out, "utf8");
+  await fs.writeFile(OUT_RSS, buildRSS(posts), "utf8");
+  await fs.writeFile(OUT_SITEMAP, buildSitemap(posts), "utf8");
+
+  console.log(`Generated: ${path.relative(ROOT, OUT_BLOG)}, ${path.relative(ROOT, OUT_RSS)}, ${path.relative(ROOT, OUT_SITEMAP)}`);
+})();
