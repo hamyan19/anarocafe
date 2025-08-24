@@ -1,0 +1,29 @@
+/* Inline CSS used by generated blog posts */
+:root {
+  --primary: #6b3f25;
+  --secondary: #a47148;
+  --bg: #f6efe9;
+  --text: #2a221d;
+  --light: #F8EBDD;
+  --border: #e9d7c5;
+  --white: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --radius: 16px;
+  --focus-ring: 0 0 0 3px rgba(107, 63, 37, 0.3);
+  --accent: #d4a574;
+  --muted: #806a5b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(180deg, #fff, var(--bg) 50%, #f0e2d6);
+  color: var(--text);
+  line-height: 1.7;
+}
+
+/* Additional minimal styling can be added here to match the ANARO coffee blog theme. */
