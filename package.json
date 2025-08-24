@@ -4,7 +4,7 @@
   "description": "ANARO Coffee Blog Auto Generator",
   "scripts": {
     "build-blog": "node scripts/generate-blog.js",
-     "make-post:inline": "node scripts/make-inline-post.js --css scripts/post-inline.css"
+    "make-post:inline": "node scripts/make-inline-post.js --css scripts/post-inline.css"
   },
   "dependencies": {
     "fs-extra": "^11.2.0",
@@ -12,4 +12,3 @@
   },
   "license": "MIT"
 }
- 
