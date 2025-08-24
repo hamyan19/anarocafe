@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
-<channel>
-  <title>ANARO Coffee Blog</title>
-  <link>https://anarocafe.vercel.app/blog.html</link>
-  <description>Blog về cà phê, pha chế và kinh doanh quán.</description>
-
-</channel>
-</rss>
+    <rss version="2.0">
+    <channel>
+      <title>ANARO Coffee Blog</title>
+      <link>https://anarocafe.vercel.app/blog.html</link>
+      <description>Blog về cà phê, pha chế và kinh doanh quán.</description>
+    
+      <item>
+        <title><![CDATA[Cách Bảo Quản Cà Phê Đúng Cách]]></title>
+        <link>https://anarocafe.vercel.app/blog/post/coffee-storage-guide.html</link>
+        <guid>https://anarocafe.vercel.app/blog/post/coffee-storage-guide.html</guid>
+        <pubDate>Sun, 24 Aug 2025 00:00:00 GMT</pubDate>
+        <description><![CDATA[Khám phá bí quyết bảo quản cà phê để giữ nguyên hương vị thơm ngon và chất lượng tối ưu trong thời gian dài nhất.]]></description>
+      </item>
+    </channel>
+    </rss>
